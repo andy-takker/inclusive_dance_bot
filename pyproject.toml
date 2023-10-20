@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "inclusive-dance-bot"
+version = "0.1.0"
+description = "Chat bot for charity organization \"Inclusive Dance\""
+authors = ["Sergey Natalenko <sergey.natalenko@mail.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.0.0"
+aiogram-dialog = "^2.0.0"
+SQLAlchemy = "^2.0.21"
+SQLAlchemy-Utils = "^0.41.1"
+alembic = "^1.12.0"
+pydantic = "^2.3.0"
+pydantic-settings = "^2.0.3"
+asyncpg = "^0.28.0"
+psycopg2-binary = "^2.9.7"
+redis = "^5.0.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.5.1"
+pre-commit = "^3.4.0"
+black = "^23.9.1"
+flake8 = "^6.1.0"
+bandit = "^1.7.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ["py311"]
+
+[tool.isort]
+known_local_folder = "src"
+py_version = "311"
+profile = "black"
+
+[tool.mypy]
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = false
+no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = "gunicorn.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "sqlalchemy_utils.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "celery.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "google_api_service_helper.*"
+ignore_missing_imports = true
