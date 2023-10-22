@@ -9,7 +9,7 @@ RUN poetry install --no-interaction --no-ansi --no-root --without dev
 COPY ./docker/pre-start.sh ./docker/start.sh /app/
 RUN chmod +x /app/start.sh /app/pre-start.sh
 
-COPY ./src /app/src
+COPY ./inclusive_dance_bot /app/inclusive_dance_bot
 
 ENV PYTHONPATH=/app
 CMD ["/app/start.sh"]

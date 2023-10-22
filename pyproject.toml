@@ -18,6 +18,8 @@ pydantic-settings = "^2.0.3"
 asyncpg = "^0.28.0"
 psycopg2-binary = "^2.9.7"
 redis = "^5.0.1"
+pytz = "^2023.3.post1"
+greenlet = "^3.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
@@ -25,6 +27,15 @@ pre-commit = "^3.4.0"
 black = "^23.9.1"
 flake8 = "^6.1.0"
 bandit = "^1.7.5"
+types-pytz = "^2023.3.1.1"
+polyfactory = "^2.10.0"
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+pytest-cov = "^4.1.0"
+
+[tool.poetry.scripts]
+bot = "inclusive_dance_bot.bot.__main__:main"
+init_data = "inclusive_dance_bot.init_data:main"
 
 [build-system]
 requires = ["poetry-core"]
@@ -34,7 +45,7 @@ build-backend = "poetry.core.masonry.api"
 target-version = ["py311"]
 
 [tool.isort]
-known_local_folder = "src"
+known_local_folder = ["inclusive_dance_bot", "tests"]
 py_version = "311"
 profile = "black"
 
