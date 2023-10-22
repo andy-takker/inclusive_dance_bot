@@ -55,5 +55,6 @@ class EntityListWindow(Window):
         storage: Storage = dialog_manager.middleware_data["storage"]
         entities = await storage.get_entities()
         entity = entities[entity_id]
-        dialog_manager.find("scroll_text").widget.text = Format(entity.message)  # type: ignore[union-attr]
+        scrolling_text = dialog_manager.find("scroll_text")
+        scrolling_text.widget.text = Format(entity.message)  # type: ignore[union-attr]
         await dialog_manager.next()

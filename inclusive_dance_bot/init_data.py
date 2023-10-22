@@ -71,7 +71,8 @@ ENTITIES = (
         17,
         EntityType.INFORMATION,
         'Документальный фильм "Танцевать под дождем"',
-        'Здесь должна быть очень важная информация о фильме и <a href="{google_doc}">ссылка</a>',
+        "Здесь должна быть очень важная информация о фильме"
+        ' и <a href="{google_doc}">ссылка</a>',
     ),
     (18, EntityType.INFORMATION, "Ссылки на наши ресурсы", "message"),
     (19, EntityType.INFORMATION, "Задать вопрос команде", "message"),

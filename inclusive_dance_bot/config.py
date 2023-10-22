@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DEBUG: bool = False
     TELEGRAM_BOT_TOKEN: SecretStr = SecretStr("default")
-    TELEGRAM_BOT_ADMIN_IDS: list[int]
+    TELEGRAM_BOT_ADMIN_IDS: list[int] = []
 
     POSTGRES_HOST: str
     POSTGRES_PORT: int

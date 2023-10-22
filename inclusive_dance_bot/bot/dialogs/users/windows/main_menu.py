@@ -109,5 +109,6 @@ class MainMenuWindow(Window):
     ) -> None:
         uow: UnitOfWork = dialog_manager.middleware_data["uow"]
         entity = await uow.entities.get_entity_by_id(entity_id=entity_id)
-        dialog_manager.find("scroll_text").widget.text = Format(entity.message)  # type: ignore[union-attr]
+        scrolling_text = dialog_manager.find("scroll_text")
+        scrolling_text.widget.text = Format(entity.message)  # type: ignore[union-attr]
         await dialog_manager.next()

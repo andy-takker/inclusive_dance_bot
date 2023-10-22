@@ -52,4 +52,5 @@ async def get_choose_user_types_data(
 async def save_user_types(
     c: CallbackQuery, widget: Button, manager: DialogManager
 ) -> None:
-    manager.dialog_data["user_type_ids"] = manager.find("s_user_types").get_checked()  # type: ignore[union-attr]
+    ms = manager.find("s_user_types")
+    manager.dialog_data["user_type_ids"] = ms.get_checked()  # type: ignore[union-attr]

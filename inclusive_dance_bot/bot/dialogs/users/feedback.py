@@ -38,7 +38,8 @@ class FeedbackDialog(Dialog):
             ),
             InputFormWindow(
                 state=FeedbackSG.input_message,
-                message="Опишите Вашу проблему или предложение. Администраторы обязательно его расcмотрят",
+                message="Опишите Вашу проблему или предложение. "
+                "Администраторы обязательно его расcмотрят",
                 field_name=FEEDBACK_TEXT_FIELD,
             ),
             ConfirmWindow(

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from inclusive_dance_bot.db.models import Entity, Feedback, Url, User, UserType
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UserDto:
     id: int
     name: str
@@ -29,7 +29,7 @@ class UserDto:
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UserTypeDto:
     id: int
     name: str
@@ -39,7 +39,7 @@ class UserTypeDto:
         return cls(id=obj.id, name=obj.name)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class EntityDto:
     id: int
     type: EntityType
@@ -58,7 +58,7 @@ class EntityDto:
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UrlDto:
     id: int
     slug: str
@@ -72,7 +72,7 @@ class UrlDto:
         return self.value
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class FeedbackDto:
     id: int
     user_id: int

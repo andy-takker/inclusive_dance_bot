@@ -1,7 +1,6 @@
-from aiogram import F, Router
+from aiogram import Router
 from aiogram.filters import Command
 
-from inclusive_dance_bot.bot.dialogs.admins import register_admin_dialogs
 from inclusive_dance_bot.bot.dialogs.commands import start_command
 from inclusive_dance_bot.bot.dialogs.users import register_user_dialogs
 from inclusive_dance_bot.bot.ui_commands import Commands
