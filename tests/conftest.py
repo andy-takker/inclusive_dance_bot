@@ -14,7 +14,7 @@ from tests.factories import FACTORIES
 from tests.utils import prepare_new_database, run_async_migrations
 
 TABLES_FOR_TRUNCATE = (
-    "entity",
+    "submenu",
     "url",
     "users",
     "user_type",

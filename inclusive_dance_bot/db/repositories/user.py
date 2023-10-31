@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from inclusive_dance_bot.db.models import User
 from inclusive_dance_bot.db.repositories.base import Repository
-from inclusive_dance_bot.dto import UserDto
+from inclusive_dance_bot.dto import ANONYMOUS_USER, UserDto
 from inclusive_dance_bot.exceptions import InclusiveDanceError, UserAlreadyExistsError
 
 
@@ -30,9 +30,9 @@ class UserRepository(Repository[User]):
             await self._session.flush()
             return UserDto.from_orm(result.one())
 
-    async def get_by_id_or_none(self, user_id: int) -> UserDto | None:
+    async def get_by_id(self, user_id: int) -> UserDto:
         obj = await self._get_by_id_or_none(obj_id=user_id)
-        return UserDto.from_orm(obj) if obj else None
+        return UserDto.from_orm(obj) if obj else ANONYMOUS_USER
 
     def _raise_error(self, e: DBAPIError) -> NoReturn:
         constraint = e.__cause__.__cause__.constraint_name  # type: ignore[union-attr]

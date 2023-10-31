@@ -11,12 +11,12 @@ from inclusive_dance_bot.bot.dialogs.messages import (
     INPUT_REGION_MESSAGE,
     THANK_FOR_REGISTRATION_MESSAGE,
 )
+from inclusive_dance_bot.bot.dialogs.users.states import MainMenuSG, RegistrationSG
 from inclusive_dance_bot.bot.dialogs.users.windows.choose_user_types import (
     ChooseUserTypesWindow,
 )
 from inclusive_dance_bot.bot.dialogs.users.windows.confirm import ConfirmWindow
 from inclusive_dance_bot.bot.dialogs.utils.input_form_field import InputFormWindow
-from inclusive_dance_bot.bot.states import MainMenuSG, RegistrationSG
 from inclusive_dance_bot.db.uow.main import UnitOfWork
 from inclusive_dance_bot.services.save_data import save_new_user
 from inclusive_dance_bot.services.storage import Storage
@@ -82,7 +82,7 @@ async def on_click_confirm_registration(
         text=THANK_FOR_REGISTRATION_MESSAGE,
     )
     await dialog_manager.done()
-    await dialog_manager.start(state=MainMenuSG.main_menu)
+    await dialog_manager.start(state=MainMenuSG.menu)
 
 
 async def get_confirm_registration_data(

@@ -8,7 +8,7 @@ from aiogram_dialog.widgets.text import Const, Format, ScrollingText
 from inclusive_dance_bot.services.storage import Storage
 
 
-class EntityWindow(Window):
+class SubmenuWindow(Window):
     def __init__(self, state: State):
         super().__init__(
             ScrollingText(text=Format("default"), id="scroll_text", page_size=1000),

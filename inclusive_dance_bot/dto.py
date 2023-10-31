@@ -4,10 +4,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from inclusive_dance_bot.enums import EntityType, FeedbackType
+from inclusive_dance_bot.enums import FeedbackType, SubmenuType
 
 if TYPE_CHECKING:
-    from inclusive_dance_bot.db.models import Entity, Feedback, Url, User, UserType
+    from inclusive_dance_bot.db.models import Feedback, Submenu, Url, User, UserType
 
 
 @dataclass(frozen=True, slots=True)
@@ -29,6 +29,11 @@ class UserDto:
         )
 
 
+ANONYMOUS_USER = UserDto(
+    id=0, name="Anonymous", region="Earth", phone_number="", is_admin=False
+)
+
+
 @dataclass(frozen=True, slots=True)
 class UserTypeDto:
     id: int
@@ -40,15 +45,15 @@ class UserTypeDto:
 
 
 @dataclass(frozen=True, slots=True)
-class EntityDto:
+class SubmenuDto:
     id: int
-    type: EntityType
+    type: SubmenuType
     weight: int
     text: str
     message: str
 
     @classmethod
-    def from_orm(cls, obj: Entity) -> EntityDto:
+    def from_orm(cls, obj: Submenu) -> SubmenuDto:
         return cls(
             id=obj.id,
             type=obj.type,

@@ -2,13 +2,13 @@ from enum import StrEnum, unique
 
 
 @unique
-class EntityType(StrEnum):
+class SubmenuType(StrEnum):
     CHARITY = "CHARITY"
     EDUCATION = "EDUCATION"
     ENROLL = "ENROLL"
     EVENT = "EVENT"
     INFORMATION = "INFORMATION"
-    SUBMENU = "SUBMENU"
+    OTHER = "SUBMENU"
 
 
 @unique
@@ -21,4 +21,4 @@ class FeedbackType(StrEnum):
 class StorageType(StrEnum):
     URL = "URL"
     USER_TYPE = "USER_TYPE"
-    ENTITY = "ENTITY"
+    SUBMENU = "SUBMENU"

@@ -6,7 +6,7 @@ from sqlalchemy_utils import ChoiceType
 
 from inclusive_dance_bot.db.base import Base
 from inclusive_dance_bot.db.mixins import TimestampMixin
-from inclusive_dance_bot.enums import EntityType, FeedbackType
+from inclusive_dance_bot.enums import FeedbackType, SubmenuType
 
 
 class User(TimestampMixin, Base):
@@ -40,10 +40,10 @@ class UserTypeUser(Base):
     )
 
 
-class Entity(TimestampMixin, Base):
+class Submenu(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    type: Mapped[EntityType] = mapped_column(
-        ChoiceType(choices=EntityType, impl=String(32)), nullable=False
+    type: Mapped[SubmenuType] = mapped_column(
+        ChoiceType(choices=SubmenuType, impl=String(32)), nullable=False
     )
     weight: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     text: Mapped[str] = mapped_column(String(64), nullable=False)

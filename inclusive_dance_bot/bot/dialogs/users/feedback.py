@@ -6,9 +6,9 @@ from aiogram_dialog import Dialog, DialogManager, ShowMode
 from aiogram_dialog.widgets.kbd import Button
 
 from inclusive_dance_bot.bot.dialogs.messages import ANSWER_ON_FEEDBACK_MESSAGE
+from inclusive_dance_bot.bot.dialogs.users.states import FeedbackSG
 from inclusive_dance_bot.bot.dialogs.users.windows.confirm import ConfirmWindow
 from inclusive_dance_bot.bot.dialogs.utils.input_form_field import InputFormWindow
-from inclusive_dance_bot.bot.states import FeedbackSG
 from inclusive_dance_bot.db.uow.main import UnitOfWork
 from inclusive_dance_bot.services.save_data import save_new_feedback
 

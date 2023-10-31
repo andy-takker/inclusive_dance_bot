@@ -4,9 +4,9 @@ import logging
 from inclusive_dance_bot.config import Settings
 from inclusive_dance_bot.db.factory import create_engine, create_session_factory
 from inclusive_dance_bot.db.uow.main import UnitOfWork
-from inclusive_dance_bot.enums import EntityType
+from inclusive_dance_bot.enums import SubmenuType
 from inclusive_dance_bot.exceptions import (
-    EntityAlreadyExistsError,
+    SubmenuAlreadyExistsError,
     UrlAlreadyExistsError,
     UserTypeAlreadyExistsError,
 )
@@ -45,39 +45,39 @@ URLS = (
     (11, "buy_form_url_7", "https://example.com"),
     (12, "buy_form_url_8", "https://example.com"),
 )
-ENTITIES = (
-    (1, EntityType.EVENT, "Клуб професионалов Inclusive Dance", "message"),
+SUMENUS = (
+    (1, SubmenuType.EVENT, "Клуб професионалов Inclusive Dance", "message"),
     (
         2,
-        EntityType.EVENT,
+        SubmenuType.EVENT,
         "Фестиваль Inclusive Dance в Москве - октябрь 2023",
         "message",
     ),
-    (3, EntityType.EVENT, "Социальное исследование", "message"),
-    (4, EntityType.EDUCATION, "Клуб профессионалов Inclusive Dance", "message"),
-    (5, EntityType.EDUCATION, "Семинары по инклюзивному танцу", "message"),
-    (6, EntityType.EDUCATION, "Онлайн-курсы по инклюзивному танцу", "message"),
-    (7, EntityType.ENROLL, 'Студия м. "Авимоторная" (Москва)', "message"),
-    (8, EntityType.ENROLL, 'Студия м. "Войковская" (Москва)', "message"),
-    (9, EntityType.CHARITY, "Сделать пожертвование", "message"),
-    (10, EntityType.CHARITY, "Стать волонтером проекта", "message"),
-    (11, EntityType.CHARITY, "Стать партнером проекта", "message"),
-    (12, EntityType.CHARITY, "Рассказать о проекте", "message"),
-    (13, EntityType.CHARITY, "Организовать показ фильма", "message"),
-    (14, EntityType.INFORMATION, "Что такое инклюзивный танец?", "message"),
-    (15, EntityType.INFORMATION, "О проекте Inclusive Dance?", "message"),
-    (16, EntityType.INFORMATION, "Новости проекта", "message"),
+    (3, SubmenuType.EVENT, "Социальное исследование", "message"),
+    (4, SubmenuType.EDUCATION, "Клуб профессионалов Inclusive Dance", "message"),
+    (5, SubmenuType.EDUCATION, "Семинары по инклюзивному танцу", "message"),
+    (6, SubmenuType.EDUCATION, "Онлайн-курсы по инклюзивному танцу", "message"),
+    (7, SubmenuType.ENROLL, 'Студия м. "Авимоторная" (Москва)', "message"),
+    (8, SubmenuType.ENROLL, 'Студия м. "Войковская" (Москва)', "message"),
+    (9, SubmenuType.CHARITY, "Сделать пожертвование", "message"),
+    (10, SubmenuType.CHARITY, "Стать волонтером проекта", "message"),
+    (11, SubmenuType.CHARITY, "Стать партнером проекта", "message"),
+    (12, SubmenuType.CHARITY, "Рассказать о проекте", "message"),
+    (13, SubmenuType.CHARITY, "Организовать показ фильма", "message"),
+    (14, SubmenuType.INFORMATION, "Что такое инклюзивный танец?", "message"),
+    (15, SubmenuType.INFORMATION, "О проекте Inclusive Dance?", "message"),
+    (16, SubmenuType.INFORMATION, "Новости проекта", "message"),
     (
         17,
-        EntityType.INFORMATION,
+        SubmenuType.INFORMATION,
         'Документальный фильм "Танцевать под дождем"',
         "Здесь должна быть очень важная информация о фильме"
         ' и <a href="{google_doc}">ссылка</a>',
     ),
-    (18, EntityType.INFORMATION, "Ссылки на наши ресурсы", "message"),
-    (19, EntityType.INFORMATION, "Задать вопрос команде", "message"),
-    (20, EntityType.SUBMENU, "Стать волонтером", "message"),
-    (21, EntityType.SUBMENU, "Купить билет", "message"),
+    (18, SubmenuType.INFORMATION, "Ссылки на наши ресурсы", "message"),
+    (19, SubmenuType.INFORMATION, "Задать вопрос команде", "message"),
+    (20, SubmenuType.OTHER, "Стать волонтером", "message"),
+    (21, SubmenuType.OTHER, "Купить билет", "message"),
 )
 
 
@@ -105,12 +105,12 @@ async def init_data() -> None:
 
     try:
         async with uow:
-            for entity in ENTITIES:
-                await uow.entities.create(
-                    id=entity[0], type=entity[1], text=entity[2], message=entity[3]
+            for submenu in SUMENUS:
+                await uow.submenus.create(
+                    id=submenu[0], type=submenu[1], text=submenu[2], message=submenu[3]
                 )
             await uow.commit()
-    except EntityAlreadyExistsError:
+    except SubmenuAlreadyExistsError:
         log.info("Entities already in database")
     log.info("Finish init data")
 

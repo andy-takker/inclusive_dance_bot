@@ -2,7 +2,7 @@ from collections.abc import Iterator, MutableMapping
 from typing import Any
 
 from inclusive_dance_bot.db.uow.main import UnitOfWork
-from inclusive_dance_bot.dto import EntityDto, UrlDto, UserTypeDto
+from inclusive_dance_bot.dto import SubmenuDto, UrlDto, UserTypeDto
 from inclusive_dance_bot.enums import StorageType
 
 
@@ -44,6 +44,10 @@ class Storage:
             }
         return self.cache[StorageType.URL]
 
+    async def get_url_by_slug(self, slug: str) -> UrlDto:
+        urls = await self.get_urls()
+        return urls[slug]
+
     async def get_user_types(self) -> dict[int, UserTypeDto]:
         if StorageType.USER_TYPE not in self.cache:
             self.cache[StorageType.USER_TYPE] = {
@@ -51,15 +55,20 @@ class Storage:
             }
         return self.cache[StorageType.USER_TYPE]
 
-    async def get_entities(self) -> dict[int, EntityDto]:
-        if StorageType.ENTITY not in self.cache:
-            self.cache[StorageType.ENTITY] = {
-                e.id: e for e in await self.uow.entities.get_all_entities()
+    async def get_submenus(self) -> dict[int, SubmenuDto]:
+        if StorageType.SUBMENU not in self.cache:
+            self.cache[StorageType.SUBMENU] = {
+                e.id: e for e in await self.uow.submenus.get_list()
             }
-        return self.cache[StorageType.ENTITY]
+        return self.cache[StorageType.SUBMENU]
 
     async def refresh_all(self) -> None:
         self.cache.clear()
         await self.get_urls()
-        await self.get_entities()
+        await self.get_submenus()
         await self.get_user_types()
+
+    async def refresh_urls(self) -> None:
+        if StorageType.URL in self.cache:
+            del self.cache[StorageType.URL]
+        await self.get_urls()

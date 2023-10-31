@@ -4,8 +4,8 @@ from polyfactory.value_generators.constrained_strings import (
     handle_constrained_string_or_bytes,
 )
 
-from inclusive_dance_bot.db.models import Entity, Feedback, Url, User, UserType
-from inclusive_dance_bot.enums import EntityType
+from inclusive_dance_bot.db.models import Feedback, Submenu, Url, User, UserType
+from inclusive_dance_bot.enums import SubmenuType
 
 
 class UserFactory(SQLAlchemyFactory[User]):
@@ -24,12 +24,12 @@ class UserTypeFactory(SQLAlchemyFactory[UserType]):
     __set_relationships__ = True
 
 
-class EntityFactory(SQLAlchemyFactory[Entity]):
-    __model__ = Entity
+class SubmenuFactory(SQLAlchemyFactory[Submenu]):
+    __model__ = Submenu
     __set_foreign_keys__ = False
     __set_relationships__ = True
 
-    type = Use(SQLAlchemyFactory.__random__.choice, list(EntityType))
+    type = Use(SQLAlchemyFactory.__random__.choice, list(SubmenuType))
 
 
 class UrlFactory(SQLAlchemyFactory[Url]):
@@ -47,7 +47,7 @@ class FeedbackFactory(SQLAlchemyFactory[Feedback]):
 FACTORIES: tuple[SQLAlchemyFactory, ...] = (
     UserFactory,
     UserTypeFactory,
-    EntityFactory,
+    SubmenuFactory,
     UrlFactory,
     FeedbackFactory,
 )

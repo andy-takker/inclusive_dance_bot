@@ -10,13 +10,13 @@ class RegistrationSG(StatesGroup):
 
 
 class MainMenuSG(StatesGroup):
-    main_menu = State()
+    menu = State()
     message = State()
 
 
-class EntitySG(StatesGroup):
+class SubmenuSG(StatesGroup):
     list_ = State()
-    entity = State()
+    submenu = State()
 
 
 class FeedbackSG(StatesGroup):

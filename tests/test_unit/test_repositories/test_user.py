@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from inclusive_dance_bot.db.models import User
 from inclusive_dance_bot.db.repositories.user import UserRepository
-from inclusive_dance_bot.dto import UserDto
+from inclusive_dance_bot.dto import ANONYMOUS_USER, UserDto
 from inclusive_dance_bot.exceptions import UserAlreadyExistsError
 from tests.factories import UserFactory
 
@@ -40,10 +40,10 @@ async def test_invalid_double_create(user_repo: UserRepository) -> None:
 
 async def test_get_by_id(user_repo: UserRepository) -> None:
     user = await UserFactory.create_async()
-    loaded_user = await user_repo.get_by_id_or_none(user.id)
+    loaded_user = await user_repo.get_by_id(user.id)
     assert loaded_user == UserDto.from_orm(user)
 
 
-async def test_get_by_id_none(user_repo: UserRepository) -> None:
-    empty = await user_repo.get_by_id_or_none(-1)
-    assert empty is None
+async def test_get_anonymous(user_repo: UserRepository) -> None:
+    anonymous = await user_repo.get_by_id(-1)
+    assert anonymous == ANONYMOUS_USER

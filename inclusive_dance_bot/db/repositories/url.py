@@ -1,6 +1,6 @@
-from typing import NoReturn
+from typing import Any, NoReturn
 
-from sqlalchemy import ScalarResult, insert, select
+from sqlalchemy import ScalarResult, delete, insert, select
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -30,6 +30,17 @@ class UrlRepository(Repository[Url]):
         else:
             await self._session.flush()
             return UrlDto.from_orm(result.one())
+
+    async def update_by_slug(self, url_slug: str, **kwargs: Any) -> UrlDto:
+        try:
+            url = await self._update(Url.slug == url_slug, **kwargs)
+        except IntegrityError as e:
+            self._raise_error(e)
+        return UrlDto.from_orm(url)
+
+    async def delete_by_slug(self, url_slug: str) -> None:
+        stmt = delete(Url).where(Url.slug == url_slug)
+        await self._session.execute(stmt)
 
     async def get_all_urls(self) -> tuple[UrlDto, ...]:
         stmt = select(Url).order_by(Url.slug)
