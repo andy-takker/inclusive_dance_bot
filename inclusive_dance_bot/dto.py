@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
-
-from git import Sequence
 
 from inclusive_dance_bot.db.models import Mailing
 from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
