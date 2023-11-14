@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 aiogram = "^3.0.0"
-aiogram-dialog = "^2.0.0"
+aiogram-dialog = "2.1.0b2"
 SQLAlchemy = "^2.0.21"
 SQLAlchemy-Utils = "^0.41.1"
 alembic = "^1.12.0"
@@ -20,6 +20,9 @@ psycopg2-binary = "^2.9.7"
 redis = "^5.0.1"
 pytz = "^2023.3.post1"
 greenlet = "^3.0.0"
+aiomisc = {extras = ["uvloop"], version = "^17.3.23"}
+aiomisc-dependency = "^0.1.20"
+aiomisc-pytest = "^1.1.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
@@ -32,14 +35,22 @@ polyfactory = "^2.10.0"
 pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
 pytest-cov = "^4.1.0"
+pytest-subtests = "^0.11.0"
 
 [tool.poetry.scripts]
-bot = "inclusive_dance_bot.bot.__main__:main"
+bot = "inclusive_dance_bot.__main__:main"
 init_data = "inclusive_dance_bot.init_data:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+python_files = "test_*"
+python_functions = "test_*"
+python_classes = "TestSuite*"
+addopts = "-p no:cacheprovider"
 
 [tool.black]
 target-version = ["py311"]
@@ -63,6 +74,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "sqlalchemy_utils.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "aiomisc_dependency.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

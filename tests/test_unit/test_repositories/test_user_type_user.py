@@ -10,8 +10,6 @@ from inclusive_dance_bot.exceptions import (
 )
 from tests.factories import UserFactory, UserTypeFactory
 
-pytestmark = [pytest.mark.asyncio]
-
 
 async def test_create(
     user_type_user_repo: UserTypeUserRepository, session: AsyncSession

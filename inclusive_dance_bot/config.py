@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     TELEGRAM_BOT_TOKEN: SecretStr = SecretStr("default")
     TELEGRAM_BOT_ADMIN_IDS: list[int] = []
 
+    PERIODIC_INTERVAL: int = 5 * 60  # 5 minutes
+    MAILING_GAP: int = 2 * 60  # 2 minutes
+
     POSTGRES_HOST: str
     POSTGRES_PORT: int
     POSTGRES_USER: str

@@ -1,6 +1,6 @@
-from typing import NoReturn
+from typing import Any, NoReturn
 
-from sqlalchemy import ScalarResult, insert, select
+from sqlalchemy import ScalarResult, delete, insert, select
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,6 +12,8 @@ from inclusive_dance_bot.exceptions import (
     UrlAlreadyExistsError,
     UrlSlugAlreadyExistsError,
 )
+from inclusive_dance_bot.exceptions.base import EntityNotFoundError
+from inclusive_dance_bot.exceptions.url import UrlNotFoundError
 
 
 class UrlRepository(Repository[Url]):
@@ -31,7 +33,20 @@ class UrlRepository(Repository[Url]):
             await self._session.flush()
             return UrlDto.from_orm(result.one())
 
-    async def get_all_urls(self) -> tuple[UrlDto, ...]:
+    async def update_by_slug(self, url_slug: str, **kwargs: Any) -> UrlDto:
+        try:
+            url = await self._update(Url.slug == url_slug, **kwargs)
+        except EntityNotFoundError as e:
+            raise UrlNotFoundError from e
+        except IntegrityError as e:
+            self._raise_error(e)
+        return UrlDto.from_orm(url)
+
+    async def delete_by_slug(self, url_slug: str) -> None:
+        stmt = delete(Url).where(Url.slug == url_slug)
+        await self._session.execute(stmt)
+
+    async def get_list(self) -> tuple[UrlDto, ...]:
         stmt = select(Url).order_by(Url.slug)
         objs = (await self._session.scalars(stmt)).all()
         return tuple(UrlDto.from_orm(obj) for obj in objs)

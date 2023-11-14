@@ -30,3 +30,10 @@ test: ##@Test Run tests with pytest
 
 test-ci: ##@Test Run tests with pytest and coverage in CI
 	pytest $(TEST_PATH) --junitxml=./junit.xml --cov=$(PROJECT_PATH) --cov-report=xml
+
+
+local: ##@Develop Run db and redis containers
+	docker-compose -f docker-compose.dev.yaml up db redis -d
+
+local_down: ##@Develop Stop containers with delete volumes
+	docker-compose -f docker-compose.dev.yaml down -v
