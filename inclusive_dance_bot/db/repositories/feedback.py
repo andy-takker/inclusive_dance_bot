@@ -38,6 +38,6 @@ class FeedbackRepository(Repository[Feedback]):
 
     def _raise_error(self, e: DBAPIError) -> NoReturn:
         constraint = e.__cause__.__cause__.constraint_name  # type: ignore[union-attr]
-        if constraint == "fk__feedback__user_id_users":
+        if constraint == "fk__feedback__user_id__users":
             raise InvalidUserIDError from e
         raise InclusiveDanceError from e

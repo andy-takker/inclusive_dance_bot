@@ -1,0 +1,87 @@
+name: Check project in all branches
+
+on:
+  workflow_call:
+  push:
+    branches-ignore:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  POSTGRES_USER: inclusive_dance
+  POSTGRES_PASSWORD: 3d88lacj9327s
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_DB: inclusive_dance_bot
+
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 389jf928fhf10
+  REDIS_DB: '3'
+
+  PROJECT_PATH: ./inclusive_dance_bot/
+  TEST_PATH: ./tests/
+
+jobs:
+  checking:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip poetry
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Run flake8
+        run: flake8 --max-line-length 88 --format=default ${{ env.PROJECT_PATH }} 2>&1 | tee flake8.txt
+
+      - name: Run black
+        run: black ${{ env.PROJECT_PATH }} --check
+
+      - name: Run bandit
+        run: bandit -r -ll -iii ${{ env.PROJECT_PATH }} -f json -o ./bandit.json
+
+      - name: Run mypy
+        run: mypy --config-file ./pyproject.toml ${{ env.PROJECT_PATH }}
+
+  test:
+    name: Run service tests with pytest
+    runs-on: ubuntu-22.04
+    container: python:3.11-slim
+    needs: checking
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          TZ: UTC
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip poetry
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Run pytest
+        run: python -m pytest ${{ env.TEST_PATH }} --junitxml=./junit.xml --cov=${{ env.PROJECT_PATH }} --cov-report=xml

@@ -7,8 +7,6 @@ from inclusive_dance_bot.dto import UserTypeDto
 from inclusive_dance_bot.exceptions import UserTypeAlreadyExistsError
 from tests.factories import UserTypeFactory
 
-pytestmark = [pytest.mark.asyncio]
-
 
 async def test_create_user_type(
     user_type_repo: UserTypeRepository, session: AsyncSession
@@ -25,13 +23,13 @@ async def test_invalid_double_create(user_type_repo: UserTypeRepository) -> None
         await user_type_repo.create(name="New user type")
 
 
-async def test_get_all_user_types_empty(user_type_repo: UserTypeRepository) -> None:
-    user_types = await user_type_repo.get_all_user_types()
+async def test_get_list_empty(user_type_repo: UserTypeRepository) -> None:
+    user_types = await user_type_repo.get_list()
     assert user_types == tuple()
 
 
-async def test_get_all_user_types(user_type_repo: UserTypeRepository) -> None:
+async def test_get_list(user_type_repo: UserTypeRepository) -> None:
     user_types = await UserTypeFactory.create_batch_async(size=5)
 
-    loaded_user_types = await user_type_repo.get_all_user_types()
+    loaded_user_types = await user_type_repo.get_list()
     assert set(loaded_user_types) == {UserTypeDto.from_orm(ut) for ut in user_types}

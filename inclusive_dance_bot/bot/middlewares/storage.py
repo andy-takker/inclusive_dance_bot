@@ -4,7 +4,7 @@ from typing import Any
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, Update
 
-from inclusive_dance_bot.services.storage import Storage
+from inclusive_dance_bot.logic.storage import Storage
 
 
 class StorageMiddleware(BaseMiddleware):

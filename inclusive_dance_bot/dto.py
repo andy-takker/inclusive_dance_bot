@@ -1,19 +1,29 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from inclusive_dance_bot.enums import EntityType, FeedbackType
+from inclusive_dance_bot.db.models import Mailing
+from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
 
 if TYPE_CHECKING:
-    from inclusive_dance_bot.db.models import Entity, Feedback, Url, User, UserType
+    from inclusive_dance_bot.db.models import (
+        Feedback,
+        Mailing,
+        Submenu,
+        Url,
+        User,
+        UserType,
+    )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UserDto:
     id: int
     name: str
+    username: str
     region: str
     phone_number: str
     is_admin: bool
@@ -23,13 +33,24 @@ class UserDto:
         return cls(
             id=obj.id,
             name=obj.name,
+            username=obj.username,
             region=obj.name,
             phone_number=obj.phone_number,
             is_admin=obj.is_admin,
         )
 
 
-@dataclass(frozen=True)
+ANONYMOUS_USER = UserDto(
+    id=0,
+    name="Anonymous",
+    region="Earth",
+    phone_number="",
+    is_admin=False,
+    username="anonymous",
+)
+
+
+@dataclass(frozen=True, slots=True)
 class UserTypeDto:
     id: int
     name: str
@@ -39,26 +60,26 @@ class UserTypeDto:
         return cls(id=obj.id, name=obj.name)
 
 
-@dataclass(frozen=True)
-class EntityDto:
+@dataclass(frozen=True, slots=True)
+class SubmenuDto:
     id: int
-    type: EntityType
+    type: SubmenuType
     weight: int
-    text: str
+    button_text: str
     message: str
 
     @classmethod
-    def from_orm(cls, obj: Entity) -> EntityDto:
+    def from_orm(cls, obj: Submenu) -> SubmenuDto:
         return cls(
             id=obj.id,
             type=obj.type,
             weight=obj.weight,
-            text=obj.text,
+            button_text=obj.button_text,
             message=obj.message,
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UrlDto:
     id: int
     slug: str
@@ -72,7 +93,7 @@ class UrlDto:
         return self.value
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class FeedbackDto:
     id: int
     user_id: int
@@ -96,4 +117,33 @@ class FeedbackDto:
             viewed_at=obj.viewed_at,
             is_answered=obj.is_answered,
             answered_at=obj.answered_at,
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class MailingDto:
+    created_at: datetime
+    updated_at: datetime
+    id: int
+    scheduled_at: datetime | None
+    sent_at: datetime | None
+    cancelled_at: datetime | None
+    status: MailingStatus
+    title: str
+    content: str
+    user_types: Sequence[UserTypeDto]
+
+    @classmethod
+    def from_orm(cls, obj: Mailing) -> MailingDto:
+        return cls(
+            created_at=obj.created_at,
+            updated_at=obj.updated_at,
+            id=obj.id,
+            scheduled_at=obj.scheduled_at,
+            cancelled_at=obj.cancelled_at,
+            status=obj.status,
+            title=obj.title,
+            content=obj.content,
+            user_types=tuple(UserTypeDto.from_orm(ut) for ut in obj.user_types),
+            sent_at=obj.sent_at,
         )

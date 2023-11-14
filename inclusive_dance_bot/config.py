@@ -5,7 +5,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DEBUG: bool = False
     TELEGRAM_BOT_TOKEN: SecretStr = SecretStr("default")
-    TELEGRAM_BOT_ADMIN_IDS: list[int]
+    TELEGRAM_BOT_ADMIN_IDS: list[int] = []
+
+    PERIODIC_INTERVAL: int = 5 * 60  # 5 minutes
+    MAILING_GAP: int = 2 * 60  # 2 minutes
 
     POSTGRES_HOST: str
     POSTGRES_PORT: int

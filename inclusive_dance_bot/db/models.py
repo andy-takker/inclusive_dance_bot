@@ -6,12 +6,13 @@ from sqlalchemy_utils import ChoiceType
 
 from inclusive_dance_bot.db.base import Base
 from inclusive_dance_bot.db.mixins import TimestampMixin
-from inclusive_dance_bot.enums import EntityType, FeedbackType
+from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
 
 
 class User(TimestampMixin, Base):
     __tablename__ = "users"  # type: ignore[assignment]
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    username: Mapped[str] = mapped_column(String(256), nullable=False, unique=True)
     name: Mapped[str] = mapped_column(String(256), nullable=False, default="")
     region: Mapped[str] = mapped_column(String(256), nullable=False, default="")
     phone_number: Mapped[str] = mapped_column(String(16), nullable=False, default="")
@@ -40,13 +41,13 @@ class UserTypeUser(Base):
     )
 
 
-class Entity(TimestampMixin, Base):
+class Submenu(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    type: Mapped[EntityType] = mapped_column(
-        ChoiceType(choices=EntityType, impl=String(32)), nullable=False
+    type: Mapped[SubmenuType] = mapped_column(
+        ChoiceType(choices=SubmenuType, impl=String(32)), nullable=False
     )
     weight: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    text: Mapped[str] = mapped_column(String(64), nullable=False)
+    button_text: Mapped[str] = mapped_column(String(64), nullable=False)
     message: Mapped[str] = mapped_column(String(4000), nullable=False)
 
 
@@ -73,4 +74,37 @@ class Feedback(TimestampMixin, Base):
     is_answered: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     answered_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, default=None
+    )
+
+
+class Mailing(TimestampMixin, Base):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    scheduled_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, index=True
+    )
+    status: Mapped[MailingStatus] = mapped_column(
+        ChoiceType(choices=MailingStatus, impl=String(16)),
+        nullable=False,
+        default=MailingStatus.SCHEDULED,
+    )
+    sent_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    cancelled_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    title: Mapped[str] = mapped_column(String(512), nullable=False, default="")
+    content: Mapped[str] = mapped_column(String(3072), nullable=False, default="")
+
+    user_types: Mapped[list["UserType"]] = relationship(
+        "UserType", secondary="mailing_user_type"
+    )
+
+
+class MailingUserType(Base):
+    mailing_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("mailing.id"), primary_key=True
+    )
+    user_type_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("user_type.id"), primary_key=True
     )

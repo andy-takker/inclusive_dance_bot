@@ -30,7 +30,7 @@ class UserTypeRepository(Repository[UserType]):
             await self._session.flush()
             return UserTypeDto.from_orm(result.one())
 
-    async def get_all_user_types(self) -> tuple[UserTypeDto, ...]:
+    async def get_list(self) -> tuple[UserTypeDto, ...]:
         stmt = select(UserType).order_by(UserType.id)
         return tuple(
             UserTypeDto.from_orm(obj)

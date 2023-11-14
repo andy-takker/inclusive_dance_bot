@@ -7,14 +7,14 @@ from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from inclusive_dance_bot.config import Settings
 
 
-def create_bot(settings: Settings) -> Bot:
+def get_bot(settings: Settings) -> Bot:
     return Bot(
         token=settings.TELEGRAM_BOT_TOKEN.get_secret_value(),
         parse_mode=ParseMode.HTML,
     )
 
 
-def create_storage(settings: Settings) -> BaseStorage:
+def get_storage(settings: Settings) -> BaseStorage:
     if settings.DEBUG:
         return MemoryStorage()
     return RedisStorage.from_url(

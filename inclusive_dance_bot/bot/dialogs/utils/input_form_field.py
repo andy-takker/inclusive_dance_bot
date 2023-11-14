@@ -26,7 +26,9 @@ class InputFormWindow(Window):
         super().__init__(
             Format("{message}"),
             TextInput(
-                id="text_input", on_success=self.on_success, type_factory=type_factory  # type: ignore[arg-type]
+                id="text_input",
+                on_success=self.on_success,  # type: ignore[arg-type]
+                type_factory=type_factory,
             ),
             Cancel(text=Const("Отмена"), when=F["is_first"]),
             Back(text=Const("Назад"), when=~F["is_first"]),
