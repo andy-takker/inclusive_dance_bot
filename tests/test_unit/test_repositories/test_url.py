@@ -10,8 +10,6 @@ from inclusive_dance_bot.exceptions import (
 )
 from tests.factories import UrlFactory
 
-pytestmark = [pytest.mark.asyncio]
-
 
 async def test_create_url(url_repo: UrlRepository, session: AsyncSession) -> None:
     url = await url_repo.create(
@@ -54,13 +52,13 @@ async def test_invalid_double_create_by_slug(
         )
 
 
-async def test_get_all_urls_empty(url_repo: UrlRepository) -> None:
-    loaded_urls = await url_repo.get_all_urls()
+async def test_get_list_empty(url_repo: UrlRepository) -> None:
+    loaded_urls = await url_repo.get_list()
     assert loaded_urls == tuple()
 
 
-async def test_get_all_urls(url_repo: UrlRepository) -> None:
+async def test_get_list(url_repo: UrlRepository) -> None:
     urls = await UrlFactory.create_batch_async(size=5)
 
-    loaded_urls = await url_repo.get_all_urls()
+    loaded_urls = await url_repo.get_list()
     assert set(loaded_urls) == {UrlDto.from_orm(u) for u in urls}

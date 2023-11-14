@@ -10,7 +10,7 @@ START_MESSAGE = """
 
 INPUT_NAME_MESSAGE = """
 А теперь я хочу с вами познакомиться.
-Укажите ваши <b>Фамилию, Имя, Отчество</b>
+Укажите ваши <b>фамилию, имя и отчество</b>
 """
 
 CHOOSE_USER_TYPE_MESSAGE = """
@@ -23,7 +23,7 @@ INPUT_REGION_MESSAGE = """
 Из какого Вы города, региона?
 """
 
-INPUT_PHONE_NUMBER_MESSAGE = """
+INPUT_PHONE_MESSAGE = """
 Укажите также свой контактный <b>номер телефона</b>
 """
 
@@ -35,4 +35,43 @@ THANK_FOR_REGISTRATION_MESSAGE = """
 ANSWER_ON_FEEDBACK_MESSAGE = """
 Спасибо за обратную связь!
 Мы обязательно рассмотрим Ваше обращение.
+"""
+CONFIRM_REGISTRATION_MESSAGE_TEMPLATE = """
+Проверьте Ваши данные
+
+ФИО: {name}
+Регион: {region}
+Вы являетесь: {user_types}
+Телефон: {phone}
+"""
+
+FEEDBACK_CONFIRM_TEMPLATE = """
+Тема: <b>{title}</b>
+
+Обращение:
+
+{text}
+"""
+
+URL_TEMPLATE = """\
+<b>Ссылка</b> {url.id}
+
+<b>Слаг:</b> {url.slug}
+<b>Значение:</b> {url.value}
+"""
+
+SUBMENU_TEMPLATE = """\
+<b>Подменю</b> {submenu.id}
+
+<b>Тип:</b> {submenu.type}
+<b>Текст кнопки:</b> {submenu.button_text}
+<b>Вес:</b> {submenu.weight}
+<b>Значение:</b> {submenu.message!r}
+"""
+
+
+ADD_ADMIN_MESSAGE = """\
+Введите ник пользователя в
+Телеграме для добавления в группу адмиинистраторов.
+Пользователь обязательно должен быть зарегистрирован в боте.
 """

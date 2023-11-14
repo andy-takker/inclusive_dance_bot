@@ -14,9 +14,23 @@ class AdminSubmenuSG(StatesGroup):
     info = State()
 
 
-class AdminCreateSubmenuSG(StatesGroup):
-    input_message = State()
-    input_text = State()
+class CreateSubmenuSG(StatesGroup):
+    type = State()
+    weight = State()
+    message = State()
+    button_text = State()
+    confirm = State()
+
+
+class ChangeSubmenuSG(StatesGroup):
+    type = State()
+    weight = State()
+    button_text = State()
+    message = State()
+
+
+class DeleteSubmenuSG(StatesGroup):
+    confirm = State()
 
 
 class ReadUrlSG(StatesGroup):
@@ -25,27 +39,57 @@ class ReadUrlSG(StatesGroup):
 
 
 class CreateUrlSG(StatesGroup):
-    input_slug = State()
-    input_value = State()
+    slug = State()
+    value = State()
     confirm = State()
 
 
 class ChangeUrlSG(StatesGroup):
-    change_slug = State()
-    change_value = State()
+    slug = State()
+    value = State()
 
 
 class DeleteUrlSG(StatesGroup):
     confirm = State()
 
 
-class AdminManageAdminSG(StatesGroup):
+class ManageAdminSG(StatesGroup):
     items = State()
 
 
-class AdminSendMessageSG(StatesGroup):
-    choose_user_types = State()
+class AddAdminSG(StatesGroup):
+    input_username = State()
+
+
+class DeleteAdminSG(StatesGroup):
+    confirm = State()
+
+
+class MailingsSG(StatesGroup):
+    menu = State()
+    items = State()
+    item = State()
+
+
+class CancelMailingSG(StatesGroup):
+    confirm = State()
+
+
+class FeedbackAsnwerSG(StatesGroup):
     input_message = State()
-    input_media = State()
-    input_datetime = State()
+    confirm = State()
+
+
+class FeedbackItemsSG(StatesGroup):
+    new = State()
+    archive = State()
+
+
+class CreateMailingSG(StatesGroup):
+    title = State()
+    content = State()
+    user_types = State()
+    is_immediately = State()
+    date = State()
+    time = State()
     confirm = State()

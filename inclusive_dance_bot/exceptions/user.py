@@ -1,10 +1,15 @@
 from inclusive_dance_bot.exceptions.base import (
     EntityAlreadyExistsError,
+    EntityNotFoundError,
     InclusiveDanceError,
 )
 
 
 class UserAlreadyExistsError(EntityAlreadyExistsError):
+    pass
+
+
+class UserNotFoundError(EntityNotFoundError):
     pass
 
 

@@ -4,8 +4,8 @@ from aiogram.fsm.state import State, StatesGroup
 class RegistrationSG(StatesGroup):
     input_name = State()
     choose_types = State()
-    input_place = State()
-    input_phone_number = State()
+    input_region = State()
+    input_phone = State()
     confirm = State()
 
 
@@ -21,5 +21,5 @@ class SubmenuSG(StatesGroup):
 
 class FeedbackSG(StatesGroup):
     input_title = State()
-    input_message = State()
+    input_text = State()
     confirm = State()

@@ -1,6 +1,6 @@
-from typing import NoReturn
+from typing import Any, NoReturn
 
-from sqlalchemy import ScalarResult, desc, insert, select
+from sqlalchemy import ScalarResult, delete, desc, insert, select
 from sqlalchemy.exc import DBAPIError, IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,6 +13,7 @@ from inclusive_dance_bot.exceptions import (
     SubmenuAlreadyExistsError,
     SubmenuNotFoundError,
 )
+from inclusive_dance_bot.exceptions.base import EntityNotFoundError
 
 
 class SubmenuRepository(Repository[Submenu]):
@@ -22,12 +23,12 @@ class SubmenuRepository(Repository[Submenu]):
     async def create(
         self,
         type: SubmenuType,
-        text: str,
+        button_text: str,
         message: str,
         weight: int = 0,
         id: int | None = None,
     ) -> SubmenuDto:
-        data = dict(type=type, text=text, message=message, weight=weight)
+        data = dict(type=type, button_text=button_text, message=message, weight=weight)
         if id is not None:
             data["id"] = id
         stmt = insert(Submenu).values(**data).returning(Submenu)
@@ -45,6 +46,19 @@ class SubmenuRepository(Repository[Submenu]):
             return SubmenuDto.from_orm(obj)
         except NoResultFound as e:
             raise SubmenuNotFoundError from e
+
+    async def update_by_id(self, submenu_id: int, **kwargs: Any) -> SubmenuDto:
+        try:
+            submenu = await self._update(Submenu.id == submenu_id, **kwargs)
+        except EntityNotFoundError as e:
+            raise SubmenuNotFoundError from e
+        except IntegrityError as e:
+            self._raise_error(e)
+        return SubmenuDto.from_orm(submenu)
+
+    async def delete_by_id(self, submenu_id: int) -> None:
+        stmt = delete(Submenu).where(Submenu.id == submenu_id)
+        await self._session.execute(stmt)
 
     async def get_list(self) -> tuple[SubmenuDto, ...]:
         query = select(Submenu).order_by(desc(Submenu.weight), Submenu.id)

@@ -11,13 +11,11 @@ from inclusive_dance_bot.exceptions import (
 )
 from tests.factories import SubmenuFactory
 
-pytestmark = [pytest.mark.asyncio]
-
 
 async def test_create(submenu_repo: SubmenuRepository, session: AsyncSession) -> None:
     submenu = await submenu_repo.create(
         type=SubmenuType.INFORMATION,
-        text="some submenu",
+        button_text="some submenu",
         message="Very long message message",
     )
     await session.commit()
@@ -31,7 +29,7 @@ async def test_invalid_double_create(
     await submenu_repo.create(
         id=1,
         type=SubmenuType.INFORMATION,
-        text="some submenu",
+        button_text="some submenu",
         message="Very long message message",
     )
     await session.commit()
@@ -39,7 +37,7 @@ async def test_invalid_double_create(
         await submenu_repo.create(
             id=1,
             type=SubmenuType.INFORMATION,
-            text="some submenu",
+            button_text="some submenu",
             message="Very long message message",
         )
 
@@ -71,8 +69,8 @@ async def test_get_list_order_by_weight(submenu_repo: SubmenuRepository) -> None
     first = await SubmenuFactory.create_async(weight=100)
     second = await SubmenuFactory.create_async(weight=30)
 
-    loaded_entities = await submenu_repo.get_list()
-    assert loaded_entities == tuple(
+    loaded_submenus = await submenu_repo.get_list()
+    assert loaded_submenus == tuple(
         SubmenuDto.from_orm(e) for e in (first, second, third)
     )
 

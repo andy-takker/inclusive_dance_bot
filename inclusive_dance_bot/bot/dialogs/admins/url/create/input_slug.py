@@ -1,11 +1,11 @@
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel
 from aiogram_dialog.widgets.text import Const
 
 from inclusive_dance_bot.bot.dialogs.admins.states import CreateUrlSG
-from inclusive_dance_bot.services.storage import Storage
+from inclusive_dance_bot.bot.dialogs.utils.buttons import CANCEL
+from inclusive_dance_bot.logic.storage import Storage
 from inclusive_dance_bot.utils import check_slug
 
 
@@ -33,6 +33,6 @@ async def on_success(
 window = Window(
     Const("Введите слаг для новой ссылки"),
     TextInput(id="input_slug", on_success=on_success),  # type: ignore[arg-type]
-    Cancel(text=Const("Назад")),
-    state=CreateUrlSG.input_slug,
+    CANCEL,
+    state=CreateUrlSG.slug,
 )

@@ -1,17 +1,16 @@
 from aiogram import Router
 
-from inclusive_dance_bot.bot.dialogs.users.feedback import FeedbackDialog
-from inclusive_dance_bot.bot.dialogs.users.main_menu import MainMenuDialog
-from inclusive_dance_bot.bot.dialogs.users.registration import RegistrationDialog
-from inclusive_dance_bot.bot.dialogs.users.submenu import SubmenuDialog
+from inclusive_dance_bot.bot.dialogs.users import (
+    feedback,
+    main_menu,
+    registration,
+    submenu,
+)
 
-
-def register_user_dialogs() -> Router:
-    dialog_router = Router(name="user_router")
-
-    dialog_router.include_router(RegistrationDialog())
-    dialog_router.include_router(MainMenuDialog())
-    dialog_router.include_router(SubmenuDialog())
-    dialog_router.include_router(FeedbackDialog())
-
-    return dialog_router
+dialog_router = Router(name="user_router")
+dialog_router.include_routers(
+    feedback.dialog,
+    main_menu.dialog,
+    registration.dialog,
+    submenu.dialog,
+)

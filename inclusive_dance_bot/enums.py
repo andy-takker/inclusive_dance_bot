@@ -8,7 +8,7 @@ class SubmenuType(StrEnum):
     ENROLL = "ENROLL"
     EVENT = "EVENT"
     INFORMATION = "INFORMATION"
-    OTHER = "SUBMENU"
+    OTHER = "OTHER"
 
 
 @unique
@@ -22,3 +22,25 @@ class StorageType(StrEnum):
     URL = "URL"
     USER_TYPE = "USER_TYPE"
     SUBMENU = "SUBMENU"
+
+
+@unique
+class FeedbackField(StrEnum):
+    TITLE = "title"
+    TEXT = "text"
+    TYPE = "type"
+
+
+@unique
+class RegistrationField(StrEnum):
+    NAME = "name"
+    REGION = "region"
+    PHONE = "phone"
+    USER_TYPE_IDS = "user_type_ids"
+
+
+@unique
+class MailingStatus(StrEnum):
+    SCHEDULED = "SCHEDULED"
+    SENT = "SENT"
+    CANCELLED = "CANCELLED"

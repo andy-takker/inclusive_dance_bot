@@ -45,7 +45,7 @@ URLS = (
     (11, "buy_form_url_7", "https://example.com"),
     (12, "buy_form_url_8", "https://example.com"),
 )
-SUMENUS = (
+SUBMENUS = (
     (1, SubmenuType.EVENT, "Клуб професионалов Inclusive Dance", "message"),
     (
         2,
@@ -81,42 +81,48 @@ SUMENUS = (
 )
 
 
-async def init_data() -> None:
+async def init_data(uow: UnitOfWork) -> None:
     log.info("Run init data")
-    settings = Settings()
-    engine = create_engine(connection_uri=settings.build_db_connection_uri())
-    session_factory = create_session_factory(engine=engine)
-    uow = UnitOfWork(sessionmaker=session_factory)
     try:
         async with uow:
             for url in URLS:
                 await uow.urls.create(slug=url[1], value=url[2], id=url[0])
             await uow.commit()
+        log.info("Urls successfully initialized")
     except UrlAlreadyExistsError:
-        log.info("Urls already in database")
+        log.warning("Urls already in database")
 
     try:
         async with uow:
             for user_type in USER_TYPES:
                 await uow.user_types.create(id=user_type[0], name=user_type[1])
             await uow.commit()
+        log.info("UserTypes successfully initialized")
     except UserTypeAlreadyExistsError:
-        log.info("UserTypes already in database")
+        log.warning("UserTypes already in database")
 
     try:
         async with uow:
-            for submenu in SUMENUS:
+            for submenu in SUBMENUS:
                 await uow.submenus.create(
-                    id=submenu[0], type=submenu[1], text=submenu[2], message=submenu[3]
+                    id=submenu[0],
+                    type=submenu[1],
+                    button_text=submenu[2],
+                    message=submenu[3],
                 )
             await uow.commit()
+        log.info("Submenu successfully initialized")
     except SubmenuAlreadyExistsError:
-        log.info("Entities already in database")
+        log.warning("Submenu already in database")
     log.info("Finish init data")
 
 
 def main() -> None:
-    asyncio.run(init_data())
+    settings = Settings()
+    engine = create_engine(connection_uri=settings.build_db_connection_uri())
+    session_factory = create_session_factory(engine=engine)
+    uow = UnitOfWork(sessionmaker=session_factory)
+    asyncio.run(init_data(uow=uow))
 
 
 if __name__ == "__main__":

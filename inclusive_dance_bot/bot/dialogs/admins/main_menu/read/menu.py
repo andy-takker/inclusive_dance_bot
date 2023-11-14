@@ -7,12 +7,12 @@ from aiogram_dialog.widgets.text import Const, Format
 from inclusive_dance_bot.bot.dialogs.admins.states import (
     AdminFeedbackSG,
     AdminMainMenuSG,
-    AdminManageAdminSG,
-    AdminSendMessageSG,
     AdminSubmenuSG,
+    MailingsSG,
+    ManageAdminSG,
     ReadUrlSG,
 )
-from inclusive_dance_bot.services.user_controller import MegaUser
+from inclusive_dance_bot.logic.user import MegaUser
 
 
 def when_(data: dict, widget: Any, dialog_manager: DialogManager) -> bool:
@@ -24,14 +24,14 @@ window = Window(
     Const("Меню администратора"),
     Format("*Здесь должна быть статистика по пользователям*"),
     Start(
-        id="feedback_id",
+        id="feedbacks",
         text=Const("Обратная связь от пользователей"),
         state=AdminFeedbackSG.items,
     ),
     Start(
-        id="send_message",
-        text=Const("Отправить сообщение пользователям"),
-        state=AdminSendMessageSG.choose_user_types,
+        id="mailings",
+        text=Const("Рассылки"),
+        state=MailingsSG.menu,
     ),
     Start(
         id="manage_submenu_id",
@@ -46,7 +46,7 @@ window = Window(
     Start(
         id="manage_admin_id",
         text=Const("Управление администраторами"),
-        state=AdminManageAdminSG.items,
+        state=ManageAdminSG.items,
         when=when_,
     ),
     state=AdminMainMenuSG.menu,

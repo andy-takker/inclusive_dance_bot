@@ -8,8 +8,6 @@ from inclusive_dance_bot.enums import FeedbackType
 from inclusive_dance_bot.exceptions import InvalidUserIDError
 from tests.factories import UserFactory
 
-pytestmark = [pytest.mark.asyncio]
-
 
 async def test_create(feedback_repo: FeedbackRepository, session: AsyncSession) -> None:
     user = await UserFactory.create_async()

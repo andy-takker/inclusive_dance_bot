@@ -2,49 +2,61 @@ from typing import Any
 
 from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, Window
-from aiogram_dialog.widgets.kbd import Button, Cancel, ScrollingGroup, Select, Start
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Select, Start
+from aiogram_dialog.widgets.text import Const, Format, List
 
 from inclusive_dance_bot.bot.dialogs.admins.states import (
-    AdminCreateSubmenuSG,
     AdminSubmenuSG,
+    CreateSubmenuSG,
 )
-from inclusive_dance_bot.services.storage import Storage
+from inclusive_dance_bot.bot.dialogs.utils import sync_scroll
+from inclusive_dance_bot.bot.dialogs.utils.buttons import CANCEL
+from inclusive_dance_bot.logic.storage import Storage
 
-SCROLL_ID = "submenu_scroll_id"
+SCROLL_KBD_ID = "submenu_scroll_id"
+SCROLL_MESSAGE_ID = "submenu_message_scroll_id"
 
 
 async def get_submenu_list_data(storage: Storage, **kwargs: Any) -> dict[str, Any]:
-    return {"submenus": (await storage.get_submenus()).values()}
+    return {"submenus": list((await storage.get_submenus()).values())}
 
 
 async def open_submenu(
     c: CallbackQuery, widget: Button, dialog_manager: DialogManager, submenu_id: int
 ) -> None:
-    pass
+    dialog_manager.dialog_data["submenu_id"] = submenu_id
+    await dialog_manager.next()
 
 
 window = Window(
-    Const("Подменю"),
+    Const("Подменю\n"),
+    List(
+        Format("[{pos}] {item.button_text} {item.id}\n{item.type}"),
+        items="submenus",
+        id=SCROLL_MESSAGE_ID,
+        page_size=10,
+        sep="\n\n",
+    ),
     ScrollingGroup(
         Select(
             Format("{pos}"),
             id="s_submenu",
-            item_id_getter=lambda x: str(x.id),
+            item_id_getter=lambda x: x.id,
             items="submenus",
             on_click=open_submenu,  # type: ignore[arg-type]
             type_factory=int,
         ),
-        id=SCROLL_ID,
+        id=SCROLL_KBD_ID,
         width=5,
-        height=3,
+        height=2,
+        on_page_changed=sync_scroll(SCROLL_MESSAGE_ID),
     ),
     Start(
         text=Const("Добавить подменю"),
         id="create_submenu",
-        state=AdminCreateSubmenuSG.input_message,
+        state=CreateSubmenuSG.type,
     ),
-    Cancel(text=Const("Назад")),
+    CANCEL,
     state=AdminSubmenuSG.items,
     getter=get_submenu_list_data,
 )

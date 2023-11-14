@@ -4,16 +4,27 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from inclusive_dance_bot.enums import FeedbackType, SubmenuType
+from git import Sequence
+
+from inclusive_dance_bot.db.models import Mailing
+from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
 
 if TYPE_CHECKING:
-    from inclusive_dance_bot.db.models import Feedback, Submenu, Url, User, UserType
+    from inclusive_dance_bot.db.models import (
+        Feedback,
+        Mailing,
+        Submenu,
+        Url,
+        User,
+        UserType,
+    )
 
 
 @dataclass(frozen=True, slots=True)
 class UserDto:
     id: int
     name: str
+    username: str
     region: str
     phone_number: str
     is_admin: bool
@@ -23,6 +34,7 @@ class UserDto:
         return cls(
             id=obj.id,
             name=obj.name,
+            username=obj.username,
             region=obj.name,
             phone_number=obj.phone_number,
             is_admin=obj.is_admin,
@@ -30,7 +42,12 @@ class UserDto:
 
 
 ANONYMOUS_USER = UserDto(
-    id=0, name="Anonymous", region="Earth", phone_number="", is_admin=False
+    id=0,
+    name="Anonymous",
+    region="Earth",
+    phone_number="",
+    is_admin=False,
+    username="anonymous",
 )
 
 
@@ -49,7 +66,7 @@ class SubmenuDto:
     id: int
     type: SubmenuType
     weight: int
-    text: str
+    button_text: str
     message: str
 
     @classmethod
@@ -58,7 +75,7 @@ class SubmenuDto:
             id=obj.id,
             type=obj.type,
             weight=obj.weight,
-            text=obj.text,
+            button_text=obj.button_text,
             message=obj.message,
         )
 
@@ -101,4 +118,33 @@ class FeedbackDto:
             viewed_at=obj.viewed_at,
             is_answered=obj.is_answered,
             answered_at=obj.answered_at,
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class MailingDto:
+    created_at: datetime
+    updated_at: datetime
+    id: int
+    scheduled_at: datetime | None
+    sent_at: datetime | None
+    cancelled_at: datetime | None
+    status: MailingStatus
+    title: str
+    content: str
+    user_types: Sequence[UserTypeDto]
+
+    @classmethod
+    def from_orm(cls, obj: Mailing) -> MailingDto:
+        return cls(
+            created_at=obj.created_at,
+            updated_at=obj.updated_at,
+            id=obj.id,
+            scheduled_at=obj.scheduled_at,
+            cancelled_at=obj.cancelled_at,
+            status=obj.status,
+            title=obj.title,
+            content=obj.content,
+            user_types=tuple(UserTypeDto.from_orm(ut) for ut in obj.user_types),
+            sent_at=obj.sent_at,
         )

@@ -5,7 +5,7 @@ from inclusive_dance_bot.bot.dialogs.admins.states import AdminMainMenuSG
 from inclusive_dance_bot.bot.dialogs.messages import START_MESSAGE
 from inclusive_dance_bot.bot.dialogs.users.states import MainMenuSG as UserMainMenuSG
 from inclusive_dance_bot.bot.dialogs.users.states import RegistrationSG
-from inclusive_dance_bot.services.user_controller import MegaUser
+from inclusive_dance_bot.logic.user import MegaUser
 
 
 async def start_command(
@@ -13,7 +13,6 @@ async def start_command(
     dialog_manager: DialogManager,
     user: MegaUser,
 ) -> None:
-    print(user)
     if user.is_admin:
         await dialog_manager.start(AdminMainMenuSG.menu, mode=StartMode.RESET_STACK)
     elif user.is_anonymous:

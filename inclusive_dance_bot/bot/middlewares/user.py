@@ -7,7 +7,7 @@ from aiogram.types import User as AiogramUser
 
 from inclusive_dance_bot.config import Settings
 from inclusive_dance_bot.db.uow.main import UnitOfWork
-from inclusive_dance_bot.services.user_controller import MegaUser
+from inclusive_dance_bot.logic.user import MegaUser
 
 
 class UserMiddleware(BaseMiddleware):

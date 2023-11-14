@@ -2,7 +2,6 @@ import asyncio
 from pathlib import Path
 
 import pytest
-import pytest_asyncio
 from alembic.config import Config as AlembicConfig
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
@@ -35,7 +34,13 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 def settings() -> Settings:
-    settings = Settings()
+    settings = Settings(
+        TELEGRAM_BOT_TOKEN="1234567890:ABCDEFGHIGHLMNOPQRST",
+        REDIS_HOST="localhost",
+        REDIS_PORT=6379,
+        REDIS_PASSWORD="secret",
+        REDIS_DB="1",
+    )
     settings.POSTGRES_DB = "test_" + settings.POSTGRES_DB
     return settings
 
@@ -47,7 +52,7 @@ def alembic_config(settings: Settings) -> AlembicConfig:
     return alembic_cfg
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest.fixture(scope="session")
 async def async_engine(
     settings: Settings, alembic_config: AlembicConfig
 ) -> AsyncEngine:
@@ -65,7 +70,7 @@ def sessionmaker(async_engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
     yield create_session_factory(engine=async_engine)
 
 
-@pytest_asyncio.fixture(autouse=True)
+@pytest.fixture(autouse=True)
 async def session(
     sessionmaker: async_sessionmaker[AsyncSession], async_engine: AsyncEngine
 ) -> AsyncSession:
@@ -77,7 +82,6 @@ async def session(
     finally:
         await session.close()
         await _clear_db(async_engine)
-        print("in fixture")
 
 
 async def _clear_db(engine: AsyncEngine) -> None:

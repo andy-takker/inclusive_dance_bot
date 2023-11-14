@@ -1,9 +1,11 @@
+import asyncio
 from types import TracebackType
 from typing import Self
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from inclusive_dance_bot.db.repositories.feedback import FeedbackRepository
+from inclusive_dance_bot.db.repositories.mailing import MailingRepository
 from inclusive_dance_bot.db.repositories.submenu import SubmenuRepository
 from inclusive_dance_bot.db.repositories.url import UrlRepository
 from inclusive_dance_bot.db.repositories.user import UserRepository
@@ -20,6 +22,7 @@ class UnitOfWork(UnitOfWorkBase):
         self._session = self._sessionmaker()
         self.submenus = SubmenuRepository(self._session)
         self.feedbacks = FeedbackRepository(self._session)
+        self.mailings = MailingRepository(self._session)
         self.urls = UrlRepository(self._session)
         self.users = UserRepository(self._session)
         self.user_types = UserTypeRepository(self._session)
@@ -33,7 +36,8 @@ class UnitOfWork(UnitOfWorkBase):
         traceback: TracebackType,
     ) -> None:
         await self._session.rollback()
-        await self._session.close()
+        task = asyncio.create_task(self._session.close())
+        await asyncio.shield(task)
 
     async def commit(self) -> None:
         await self._session.commit()
