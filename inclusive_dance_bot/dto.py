@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from inclusive_dance_bot.db.models import Mailing
 from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
 
 if TYPE_CHECKING:

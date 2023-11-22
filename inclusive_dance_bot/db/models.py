@@ -4,8 +4,7 @@ from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, Strin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import ChoiceType
 
-from inclusive_dance_bot.db.base import Base
-from inclusive_dance_bot.db.mixins import TimestampMixin
+from inclusive_dance_bot.db.base import Base, TimestampMixin
 from inclusive_dance_bot.enums import FeedbackType, MailingStatus, SubmenuType
 
 

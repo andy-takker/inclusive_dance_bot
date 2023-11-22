@@ -2,8 +2,8 @@ import asyncio
 import logging
 
 from inclusive_dance_bot.config import Settings
-from inclusive_dance_bot.db.factory import create_engine, create_session_factory
 from inclusive_dance_bot.db.uow.main import UnitOfWork
+from inclusive_dance_bot.db.utils import create_engine, create_session_factory
 from inclusive_dance_bot.enums import SubmenuType
 from inclusive_dance_bot.exceptions import (
     SubmenuAlreadyExistsError,

@@ -6,7 +6,6 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from inclusive_dance_bot.config import Settings
 from inclusive_dance_bot.db.models import Base
 
 config = context.config
@@ -16,8 +15,6 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 
-settings = Settings()
-config.set_main_option("sqlalchemy.url", settings.build_db_connection_uri())
 target_metadata = Base.metadata
 
 

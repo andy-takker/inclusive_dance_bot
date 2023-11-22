@@ -1,7 +1,9 @@
 import re
+from datetime import datetime
 
-from sqlalchemy import MetaData
-from sqlalchemy.orm import as_declarative, declared_attr
+import pytz
+from sqlalchemy import DateTime, MetaData, text
+from sqlalchemy.orm import Mapped, as_declarative, declared_attr, mapped_column
 
 convention = {
     "all_column_names": lambda constraint, table: "_".join(
@@ -25,3 +27,22 @@ class Base:
     def __tablename__(cls) -> str:
         name_list = re.findall(r"[A-Z][a-z\d]*", cls.__name__)
         return "_".join(name_list).lower()
+
+
+def now_with_tz() -> datetime:
+    return datetime.now(tz=pytz.UTC)
+
+
+class TimestampMixin:
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=now_with_tz,
+        server_default=text("TIMEZONE('utc', now())"),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=now_with_tz,
+        onupdate=now_with_tz,
+        server_default=text("TIMEZONE('utc', now())"),
+    )
