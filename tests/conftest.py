@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from alembic.config import Config as AlembicConfig
@@ -8,7 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from inclusive_dance_bot.config import Settings
 from inclusive_dance_bot.db.base import Base
-from inclusive_dance_bot.db.factory import create_engine, create_session_factory
+from inclusive_dance_bot.db.utils import (
+    create_engine,
+    create_session_factory,
+    make_alembic_config,
+)
 from tests.factories import FACTORIES
 from tests.utils import prepare_new_database, run_async_migrations
 
@@ -47,9 +52,14 @@ def settings() -> Settings:
 
 @pytest.fixture(scope="session")
 def alembic_config(settings: Settings) -> AlembicConfig:
-    alembic_cfg = AlembicConfig(PROJECT_PATH / "inclusive_dance_bot" / "alembic.ini")
-    alembic_cfg.set_main_option("sqlalchemy.url", settings.build_db_connection_uri())
-    return alembic_cfg
+    cmd_options = SimpleNamespace(
+        config="alembic.ini",
+        name="alembic",
+        pg_url=settings.build_db_connection_uri(),
+        raiseerr=False,
+        x=None,
+    )
+    return make_alembic_config(cmd_options)
 
 
 @pytest.fixture(scope="session")

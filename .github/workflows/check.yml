@@ -17,14 +17,6 @@ env:
   POSTGRES_PORT: 5432
   POSTGRES_DB: inclusive_dance_bot
 
-  REDIS_HOST: redis
-  REDIS_PORT: 6379
-  REDIS_PASSWORD: 389jf928fhf10
-  REDIS_DB: '3'
-
-  PROJECT_PATH: ./inclusive_dance_bot/
-  TEST_PATH: ./tests/
-
 jobs:
   checking:
     runs-on: ubuntu-22.04
@@ -38,27 +30,24 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          python -m pip install -U pip poetry
-          poetry config virtualenvs.create false
-          poetry install
+        run: make develop
 
       - name: Run flake8
-        run: flake8 --max-line-length 88 --format=default ${{ env.PROJECT_PATH }} 2>&1 | tee flake8.txt
+        run: make flake
 
       - name: Run black
-        run: black ${{ env.PROJECT_PATH }} --check
+        run: make black
 
       - name: Run bandit
-        run: bandit -r -ll -iii ${{ env.PROJECT_PATH }} -f json -o ./bandit.json
+        run: make bandit
 
       - name: Run mypy
-        run: mypy --config-file ./pyproject.toml ${{ env.PROJECT_PATH }}
+        run: make mypy
 
   test:
     name: Run service tests with pytest
     runs-on: ubuntu-22.04
-    container: python:3.11-slim
+    container: python:3.11
     needs: checking
     services:
       postgres:
@@ -78,10 +67,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: |
-          python -m pip install -U pip poetry
-          poetry config virtualenvs.create false
-          poetry install
+        run: make develop
 
       - name: Run pytest
-        run: python -m pytest ${{ env.TEST_PATH }} --junitxml=./junit.xml --cov=${{ env.PROJECT_PATH }} --cov-report=xml
+        run: make test-ci
