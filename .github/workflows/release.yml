@@ -38,5 +38,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
+          file: ./docker/bot.dockerfile
+          context: ./
           platforms: linux/amd64,linux/arm64
           tags: andytakker/${{ env.PROJECT_NAME }}:latest
