@@ -41,7 +41,6 @@ def make_alembic_config(cmd_opts: Namespace, base_path: Path = PROJECT_PATH) -> 
     alembic_location = config.get_main_option("script_location")
     if not alembic_location:
         raise ValueError
-    print(alembic_location)
     if not os.path.isabs(alembic_location):
         config.set_main_option("script_location", str(base_path / alembic_location))
 

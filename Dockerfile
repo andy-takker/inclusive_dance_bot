@@ -6,10 +6,10 @@ WORKDIR /app
 COPY ./pyproject.toml ./poetry.lock* /app/
 RUN poetry install --no-interaction --no-ansi --no-root --without dev
 
-COPY ./docker/pre-start.sh ./docker/start.sh /app/
-RUN chmod +x /app/start.sh /app/pre-start.sh
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /
+COPY /start.sh /app/
+RUN chmod +x /app/start.sh /wait-for-it.sh
 
 COPY ./inclusive_dance_bot /app/inclusive_dance_bot
 
 ENV PYTHONPATH=/app
-CMD ["/app/start.sh"]
