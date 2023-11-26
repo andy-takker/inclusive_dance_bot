@@ -28,3 +28,7 @@ def main() -> None:
     ) as loop:
         log.info("Entrypoint started")
         loop.run_forever()
+
+
+if __name__ == "__main__":
+    main()
