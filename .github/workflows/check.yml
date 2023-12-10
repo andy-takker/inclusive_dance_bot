@@ -85,4 +85,4 @@ jobs:
 
     steps:
       - name: Send notify
-        run: python ./.github/workflows/gotify.py
+        run: python ./gotify.py

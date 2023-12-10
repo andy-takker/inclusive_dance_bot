@@ -1,6 +1,6 @@
+import json
 import os
-
-import requests
+import urllib.request
 
 MARKDOWN_MESSAGE_TEMPLATE = """
 {message}
@@ -21,24 +21,26 @@ def send_message(
     action_url: str,
     repository_url: str,
 ) -> None:
-    requests.post(
-        url="http://188.225.87.124/message",
-        params={"token": token},
-        json={
-            "title": title,
-            "message": MARKDOWN_MESSAGE_TEMPLATE.format(
-                message=message,
-                event_name=event_name,
-                action_url=action_url,
-                repository_url=repository_url,
-            ),
-            "extras": {
-                "client::display": {
-                    "contentType": "text/markdown",
-                }
-            },
+    data = {
+        "title": title,
+        "message": MARKDOWN_MESSAGE_TEMPLATE.format(
+            message=message,
+            event_name=event_name,
+            action_url=action_url,
+            repository_url=repository_url,
+        ),
+        "extras": {
+            "client::display": {
+                "contentType": "text/markdown",
+            }
         },
+    }
+    req = urllib.request.Request(
+        url=f"http://188.225.87.124/message?token={token}",
+        data=json.dumps(data).encode("utf-8"),
+        headers={"content-type": "application/json"},
     )
+    urllib.request.urlopen(req)  # nosec
 
 
 def main():
