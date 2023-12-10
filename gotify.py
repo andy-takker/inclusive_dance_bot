@@ -52,7 +52,8 @@ def main():
     repository_url = os.getenv("GOTIFY_REPOSITORY_URL")
     title = os.getenv("GOTIFY_TITLE")
     message = os.getenv("GOTIFY_MESSAGE")
-
+    if not gotify_host:
+        return
     send_message(
         gotify_host=gotify_host,
         token=token,
