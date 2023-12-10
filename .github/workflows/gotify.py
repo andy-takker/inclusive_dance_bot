@@ -10,7 +10,6 @@ Triggered by {event_name}
 [Action]({action_url})
 
 [Repository]({repository_url})
-
 """
 
 
