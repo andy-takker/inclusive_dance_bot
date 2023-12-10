@@ -11,18 +11,16 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  POSTGRES_USER: inclusive_dance
-  POSTGRES_PASSWORD: 3d88lacj9327s
-  POSTGRES_HOST: postgres
-  POSTGRES_PORT: 5432
-  POSTGRES_DB: inclusive_dance_bot
+  APP_PG_DB_NAME: test_db
+  APP_PG_DSN: postgresql+asyncpg://pguser:pguser@postgres:5432/test_db
+  APP_BASE_PG_DSN: postgresql+asyncpg://pguser:pguser@postgres:5432/postgres
 
 jobs:
   checking:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup python 3.11
         uses: actions/setup-python@v4
@@ -54,9 +52,10 @@ jobs:
         image: postgres:15
         env:
           TZ: UTC
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
-          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_USER: pguser
+          POSTGRES_PASSWORD: pguser
+          POSTGRES_DB: ${{ env.APP_PG_DB_NAME }}
+
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -64,10 +63,30 @@ jobs:
           --health-retries 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: make develop
 
       - name: Run pytest
         run: make test-ci
+
+  notify:
+    name: Notify successful CI
+    needs: test
+    runs-on: ubuntu-22.04
+    env:
+      GOTIFY_HOST: ${{ secrets.GOTIFY_HOST }}
+      GOTIFY_APP_TOKEN: ${{ secrets.GOTIFY_APP_TOKEN }}
+      GOTIFY_TITLE: Inclusive Dance Bot
+      GOTIFY_MESSAGE: Checked repo ${{ github.REF_NAME }}
+      GOTIFY_EVENT_NAME: ${{ github.EVENT_NAME  }}
+      GOTIFY_REPOSITORY_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}
+      GOTIFY_ACTION_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send notify
+        run: python ./gotify.py

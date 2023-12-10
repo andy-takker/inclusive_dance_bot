@@ -89,3 +89,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "google_api_service_helper.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "configargparse.*"
+ignore_missing_imports = true
