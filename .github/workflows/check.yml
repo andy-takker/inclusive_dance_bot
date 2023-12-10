@@ -11,7 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PROJECT_TITLE: Inclusive Dance Bot
   APP_PG_DB_NAME: test_db
   APP_PG_DSN: postgresql+asyncpg://pguser:pguser@postgres:5432/test_db
   APP_BASE_PG_DSN: postgresql+asyncpg://pguser:pguser@postgres:5432/postgres
@@ -76,10 +75,14 @@ jobs:
     name: Notify successful CI
     needs: test
     runs-on: ubuntu-22.04
+    env:
+      GOTIFY_APP_TOKEN: ${{ secrets.GOTIFY_APP_TOKEN }}
+      GOTIFY_TITLE: Inclusive Dance Bot
+      GOTIFY_MESSAGE: Checked repo ${{ github.REF_NAME }}
+      GOTIFY_EVENT_NAME: ${{ github.EVENT_NAME  }}
+      GOTIFY_REPOSITORY_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}
+      GOTIFY_ACTION_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}
+
     steps:
       - name: Send notify
-        run: |
-          curl "http://188.225.87.124/message?token=${{ secrets.GOTIFY_APP_TOKEN }}" \
-            -F "title=${{ env.PROJECT_TITLE }}" \
-            -F "message=Checked ${{ github.REF_NAME }} ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}" \
-            -F "priority=2"
+        run: python ./.github/workflows/gotify.py
