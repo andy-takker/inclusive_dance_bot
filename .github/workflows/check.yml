@@ -81,5 +81,5 @@ jobs:
         run: |
           curl "http://188.225.87.124/message?token=${{ secrets.GOTIFY_APP_TOKEN }}" \
             -F "title=${{ env.PROJECT_TITLE }}" \
-            -F "message=Checked ${{ github.REF_NAME }}\n${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}" \
+            -F "message=Checked ${{ github.REF_NAME }} ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}" \
             -F "priority=2"
