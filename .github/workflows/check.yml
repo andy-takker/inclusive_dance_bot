@@ -84,5 +84,8 @@ jobs:
       GOTIFY_ACTION_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Send notify
         run: python ./gotify.py
