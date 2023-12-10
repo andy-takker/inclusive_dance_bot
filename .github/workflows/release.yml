@@ -2,6 +2,7 @@ name: Make release
 
 env:
   PROJECT_NAME: inclusive_dance_bot
+  PROJECT_TITLE: Inclusive Dance Bot
 
 on:
   workflow_dispatch:
@@ -20,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,3 +41,10 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: andytakker/${{ env.PROJECT_NAME }}:latest
+
+      - name: Send release notification
+        run: |
+          curl "http://188.225.87.124/message?token=${{ secrets.GOTIFY_APP_TOKEN }}" \
+            -F "title=${{ env.PROJECT_TITLE }}" \
+            -F "message=Released ${{ github.SHA }}" \
+            -F "priority=2"

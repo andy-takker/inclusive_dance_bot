@@ -1,4 +1,5 @@
 import asyncio
+import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -7,7 +8,6 @@ from alembic.config import Config as AlembicConfig
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-from inclusive_dance_bot.config import Settings
 from inclusive_dance_bot.db.base import Base
 from inclusive_dance_bot.db.utils import (
     create_engine,
@@ -38,24 +38,29 @@ def event_loop():
 
 
 @pytest.fixture(scope="session")
-def settings() -> Settings:
-    settings = Settings(
-        TELEGRAM_BOT_TOKEN="1234567890:ABCDEFGHIGHLMNOPQRST",
-        REDIS_HOST="localhost",
-        REDIS_PORT=6379,
-        REDIS_PASSWORD="secret",
-        REDIS_DB="1",
-    )
-    settings.POSTGRES_DB = "test_" + settings.POSTGRES_DB
-    return settings
+def db_name():
+    default = "test_pgdb"
+    return os.getenv("APP_PG_DB_NAME", default)
 
 
 @pytest.fixture(scope="session")
-def alembic_config(settings: Settings) -> AlembicConfig:
+def pg_dsn(localhost, db_name: str) -> str:
+    default = f"postgresql+asyncpg://pguser:pguser@{localhost}:5432/{db_name}"
+    return os.getenv("APP_PG_DSN", default)
+
+
+@pytest.fixture(scope="session")
+def base_pg_dsn(localhost) -> str:
+    default = f"postgresql+asyncpg://pguser:pguser@{localhost}:5432/postgres"
+    return os.getenv("APP_BASE_PG_DSN", default)
+
+
+@pytest.fixture(scope="session")
+def alembic_config(pg_dsn: str) -> AlembicConfig:
     cmd_options = SimpleNamespace(
         config="alembic.ini",
         name="alembic",
-        pg_url=settings.build_db_connection_uri(),
+        pg_url=pg_dsn,
         raiseerr=False,
         x=None,
     )
@@ -64,11 +69,14 @@ def alembic_config(settings: Settings) -> AlembicConfig:
 
 @pytest.fixture(scope="session")
 async def async_engine(
-    settings: Settings, alembic_config: AlembicConfig
+    alembic_config: AlembicConfig,
+    base_pg_dsn: str,
+    pg_dsn: str,
+    db_name: str,
 ) -> AsyncEngine:
-    await prepare_new_database(settings=settings)
+    await prepare_new_database(base_pg_dsn=base_pg_dsn, db_name=db_name)
     await run_async_migrations(alembic_config, Base.metadata, "head")
-    engine = create_engine(settings.build_db_connection_uri())
+    engine = create_engine(pg_dsn)
     yield engine
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
