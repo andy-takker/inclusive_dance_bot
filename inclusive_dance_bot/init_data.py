@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from inclusive_dance_bot.config import Settings
+from inclusive_dance_bot.arguments import get_parser
 from inclusive_dance_bot.db.uow.main import UnitOfWork
 from inclusive_dance_bot.db.utils import create_engine, create_session_factory
 from inclusive_dance_bot.enums import SubmenuType
@@ -118,8 +118,9 @@ async def init_data(uow: UnitOfWork) -> None:
 
 
 def main() -> None:
-    settings = Settings()
-    engine = create_engine(connection_uri=settings.build_db_connection_uri())
+    parser = get_parser()
+    arguments = parser.parse_args()
+    engine = create_engine(connection_uri=arguments.pg_dsn)
     session_factory = create_session_factory(engine=engine)
     uow = UnitOfWork(sessionmaker=session_factory)
     asyncio.run(init_data(uow=uow))

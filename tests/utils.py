@@ -10,8 +10,6 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from inclusive_dance_bot.config import Settings
-
 
 async def run_async_migrations(
     config: AlembicConfig,
@@ -42,15 +40,13 @@ async def run_async_migrations(
             )
 
 
-async def prepare_new_database(settings: Settings) -> None:
+async def prepare_new_database(base_pg_dsn: str, db_name: str) -> None:
     """Using default postgres database for creating new test db"""
-    connection_url = settings.build_db_connection_uri(database="postgres")
-
-    engine = create_async_engine(connection_url)
+    engine = create_async_engine(base_pg_dsn)
     async with engine.begin() as conn:
-        if await _database_exists(conn, settings.POSTGRES_DB):
-            await _drop_database(conn, settings.POSTGRES_DB)
-        await _create_database(conn, settings.POSTGRES_DB)
+        if await _database_exists(conn, db_name=db_name):
+            await _drop_database(conn, db_name=db_name)
+        await _create_database(conn, db_name=db_name)
     await engine.dispose()
 
 

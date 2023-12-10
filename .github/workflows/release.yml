@@ -2,6 +2,7 @@ name: Make release
 
 env:
   PROJECT_NAME: inclusive_dance_bot
+  PROJECT_TITLE: Inclusive Dance Bot
 
 on:
   workflow_dispatch:
@@ -20,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,3 +41,23 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: andytakker/${{ env.PROJECT_NAME }}:latest
+
+  notify:
+    name: Notify successful CI
+    needs: build_and_push
+    runs-on: ubuntu-22.04
+    env:
+      GOTIFY_HOST: ${{ secrets.GOTIFY_HOST }}
+      GOTIFY_APP_TOKEN: ${{ secrets.GOTIFY_APP_TOKEN }}
+      GOTIFY_TITLE: Inclusive Dance Bot
+      GOTIFY_MESSAGE: New version was released!
+      GOTIFY_EVENT_NAME: ${{ github.EVENT_NAME  }}
+      GOTIFY_REPOSITORY_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}
+      GOTIFY_ACTION_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send notify
+        run: python ./gotify.py

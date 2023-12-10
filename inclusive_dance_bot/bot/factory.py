@@ -4,20 +4,18 @@ from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 
-from inclusive_dance_bot.config import Settings
 
-
-def get_bot(settings: Settings) -> Bot:
+def get_bot(telegram_bot_token: str) -> Bot:
     return Bot(
-        token=settings.TELEGRAM_BOT_TOKEN.get_secret_value(),
+        token=telegram_bot_token,
         parse_mode=ParseMode.HTML,
     )
 
 
-def get_storage(settings: Settings) -> BaseStorage:
-    if settings.DEBUG:
+def get_storage(debug: bool, redis_dsn: str) -> BaseStorage:
+    if debug:
         return MemoryStorage()
     return RedisStorage.from_url(
-        url=settings.build_redis_connection_uri(),
+        url=redis_dsn,
         key_builder=DefaultKeyBuilder(with_destiny=True),
     )
