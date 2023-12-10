@@ -14,6 +14,7 @@ Triggered by {event_name}
 
 
 def send_message(
+    gotify_host: str,
     token: str,
     title: str,
     message: str,
@@ -36,7 +37,7 @@ def send_message(
         },
     }
     req = urllib.request.Request(
-        url=f"http://188.225.87.124/message?token={token}",
+        url=f"http://{gotify_host}/message?token={token}",
         data=json.dumps(data).encode("utf-8"),
         headers={"content-type": "application/json"},
     )
@@ -44,6 +45,7 @@ def send_message(
 
 
 def main():
+    gotify_host = os.getenv("GOTIFY_HOST")
     token = os.getenv("GOTIFY_APP_TOKEN")
     event_name = os.getenv("GOTIFY_EVENT_NAME")
     action_url = os.getenv("GOTIFY_ACTION_URL")
@@ -52,6 +54,7 @@ def main():
     message = os.getenv("GOTIFY_MESSAGE")
 
     send_message(
+        gotify_host=gotify_host,
         token=token,
         title=title,
         repository_url=repository_url,

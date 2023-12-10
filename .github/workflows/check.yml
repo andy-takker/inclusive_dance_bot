@@ -76,6 +76,7 @@ jobs:
     needs: test
     runs-on: ubuntu-22.04
     env:
+      GOTIFY_HOST: ${{ secrets.GOTIFY_HOST }}
       GOTIFY_APP_TOKEN: ${{ secrets.GOTIFY_APP_TOKEN }}
       GOTIFY_TITLE: Inclusive Dance Bot
       GOTIFY_MESSAGE: Checked repo ${{ github.REF_NAME }}

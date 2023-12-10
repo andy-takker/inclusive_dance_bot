@@ -42,9 +42,22 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: andytakker/${{ env.PROJECT_NAME }}:latest
 
-      - name: Send release notification
-        run: |
-          curl "http://188.225.87.124/message?token=${{ secrets.GOTIFY_APP_TOKEN }}" \
-            -F "title=${{ env.PROJECT_TITLE }}" \
-            -F "message=Released ${{ github.SHA }} ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}" \
-            -F "priority=2"
+  notify:
+    name: Notify successful CI
+    needs: build_and_push
+    runs-on: ubuntu-22.04
+    env:
+      GOTIFY_HOST: ${{ secrets.GOTIFY_HOST }}
+      GOTIFY_APP_TOKEN: ${{ secrets.GOTIFY_APP_TOKEN }}
+      GOTIFY_TITLE: Inclusive Dance Bot
+      GOTIFY_MESSAGE: New version was released!
+      GOTIFY_EVENT_NAME: ${{ github.EVENT_NAME  }}
+      GOTIFY_REPOSITORY_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}
+      GOTIFY_ACTION_URL: ${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send notify
+        run: python ./gotify.py
