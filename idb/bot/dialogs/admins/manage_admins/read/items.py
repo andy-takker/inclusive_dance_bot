@@ -42,7 +42,7 @@ window = Window(
         hide_on_single_page=True,
     ),
     Start(
-        text=Const("Добавить администратора"),
+        text=Const("💻 Назначить администратора"),
         id="add_admin",
         state=AddAdminSG.input_username,
     ),

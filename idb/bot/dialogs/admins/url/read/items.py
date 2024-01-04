@@ -48,7 +48,7 @@ window = Window(
         on_page_changed=sync_scroll(SCROLL_MESSAGE_ID),
     ),
     Start(
-        text=Const("Добавить ссылку"),
+        text=Const("🆕 Добавить ссылку"),
         id="create_url",
         state=CreateUrlSG.slug,
     ),

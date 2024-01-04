@@ -25,6 +25,7 @@ aiomisc-dependency = "^0.1.20"
 aiomisc-pytest = "^1.1.1"
 configargparse = "^1.7"
 ujson = "^5.9.0"
+pyyaml = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
