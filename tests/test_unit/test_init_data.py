@@ -1,12 +1,48 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from idb.db.uow import UnitOfWork
+from idb.generals.enums import SubmenuType
+from inutils.init_data import write_submenus, write_urls, write_user_types
 
-from inclusive_dance_bot.db.uow.main import UnitOfWork
-from inclusive_dance_bot.init_data import SUBMENUS, URLS, USER_TYPES, init_data
+# async def test_init_data_from_scratch(uow: UnitOfWork) -> None:
+#     await write_data(uow=uow, filename=PROJECT_FOLDER / "inutils/init_data.yaml")
+
+#     assert len(await uow.urls.list()) > 0
+#     assert len(await uow.submenus.list()) > 0
+#     assert len(await uow.user_types.list()) > 0
 
 
-async def test_init_data_from_scratch(uow: UnitOfWork, session: AsyncSession) -> None:
-    await init_data(uow=uow)
+async def test_write_urls_from_scratch(uow: UnitOfWork) -> None:
+    urls = [
+        {
+            "id": 1,
+            "slug": "some_url",
+            "value": "https://example.com",
+        }
+    ]
 
-    assert len(await uow.urls.get_list()) == len(URLS)
-    assert len(await uow.submenus.get_list()) == len(SUBMENUS)
-    assert len(await uow.user_types.get_list()) == len(USER_TYPES)
+    await write_urls(uow, urls)
+    assert len(await uow.urls.list()) == 1
+
+
+async def test_write_submenus_from_scratch(uow: UnitOfWork) -> None:
+    submenus = [
+        {
+            "id": 1,
+            "type": SubmenuType.CHARITY,
+            "button_text": "something",
+            "message": "Hello",
+            "weight": 1.0,
+        }
+    ]
+    await write_submenus(uow, submenus)
+    assert len(await uow.submenus.list()) == 1
+
+
+async def test_write_user_types_from_scratch(uow: UnitOfWork) -> None:
+    user_types = [
+        {
+            "id": 1,
+            "name": "Somebody",
+        }
+    ]
+    await write_user_types(uow, user_types)
+    assert len(await uow.user_types.list()) == 1

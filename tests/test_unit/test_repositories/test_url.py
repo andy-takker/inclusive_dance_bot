@@ -1,13 +1,13 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inclusive_dance_bot.db.models import Url
-from inclusive_dance_bot.db.repositories.url import UrlRepository
-from inclusive_dance_bot.dto import UrlDto
-from inclusive_dance_bot.exceptions import (
+from idb.db.models import Url as UrlDb
+from idb.db.repositories.url import UrlRepository
+from idb.exceptions import (
     UrlAlreadyExistsError,
     UrlSlugAlreadyExistsError,
 )
+from idb.generals.models.url import Url
 from tests.factories import UrlFactory
 
 
@@ -17,8 +17,8 @@ async def test_create_url(url_repo: UrlRepository, session: AsyncSession) -> Non
         value="https://yandex.ru",
     )
     await session.commit()
-    saved_url = await session.get(Url, url.id)
-    assert url == UrlDto.from_orm(saved_url)
+    saved_url = await session.get(UrlDb, url.id)
+    assert url == Url.model_validate(saved_url)
 
 
 async def test_invalid_double_create_by_id(
@@ -53,12 +53,12 @@ async def test_invalid_double_create_by_slug(
 
 
 async def test_get_list_empty(url_repo: UrlRepository) -> None:
-    loaded_urls = await url_repo.get_list()
+    loaded_urls = await url_repo.list()
     assert loaded_urls == tuple()
 
 
 async def test_get_list(url_repo: UrlRepository) -> None:
     urls = await UrlFactory.create_batch_async(size=5)
-
-    loaded_urls = await url_repo.get_list()
-    assert set(loaded_urls) == {UrlDto.from_orm(u) for u in urls}
+    urls.sort(key=lambda x: x.id)
+    loaded_urls = await url_repo.list()
+    assert loaded_urls == tuple(Url.model_validate(u) for u in urls)

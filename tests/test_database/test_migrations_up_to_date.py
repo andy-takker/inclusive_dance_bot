@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from inclusive_dance_bot.db.models import Base
+from idb.db.models import Base
 from tests.utils import get_diff_db_metadata
 
 

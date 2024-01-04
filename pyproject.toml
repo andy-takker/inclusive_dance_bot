@@ -24,11 +24,11 @@ aiomisc = {extras = ["uvloop"], version = "^17.3.23"}
 aiomisc-dependency = "^0.1.20"
 aiomisc-pytest = "^1.1.1"
 configargparse = "^1.7"
+ujson = "^5.9.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
 pre-commit = "^3.4.0"
-black = "^23.9.1"
 flake8 = "^6.1.0"
 bandit = "^1.7.5"
 types-pytz = "^2023.3.1.1"
@@ -37,6 +37,9 @@ pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
 pytest-cov = "^4.1.0"
 pytest-subtests = "^0.11.0"
+types-pyyaml = "^6.0.12.12"
+types-ujson = "^5.9.0.0"
+ruff = "^0.1.11"
 
 [tool.poetry.scripts]
 bot = "inclusive_dance_bot.__main__:main"
@@ -58,7 +61,7 @@ addopts = "-p no:cacheprovider"
 target-version = ["py311"]
 
 [tool.isort]
-known_local_folder = ["inclusive_dance_bot", "tests"]
+known_local_folder = ["idb", "tests"]
 py_version = "311"
 profile = "black"
 
@@ -93,3 +96,43 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "configargparse.*"
 ignore_missing_imports = true
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+]
+
+line-length = 88
+indent-width = 4
+
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "BLE",
+    "C90",
+    "E",
+    "F",
+    "G",
+    "I",
+    "ICN",
+    "ISC",
+    "PLE",
+    "Q",
+    "RUF006",
+    "RUF100",
+    "T10",
+    "T20",
+    "TID",
+    "UP",
+    "W",
+]
+ignore = ["ISC001"]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

@@ -1,4 +1,4 @@
-PROJECT_PATH = ./inclusive_dance_bot/
+PROJECT_PATH = ./idb/
 TEST_PATH = ./tests/
 
 HELP_FUN = \
@@ -11,13 +11,13 @@ help: ##@Help Show this help
 	@echo -e "Usage: make [target] ...\n"
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-lint-ci: flake black bandit mypy  ##@Linting Run all linters in CI
+lint-ci: flake ruff bandit mypy  ##@Linting Run all linters in CI
 
 flake: ##@Linting Run flake8
 	.venv/bin/flake8 --max-line-length 88 --format=default $(PROJECT_PATH) 2>&1 | tee flake8.txt
 
-black: ##@Linting Run black
-	.venv/bin/black $(PROJECT_PATH) --check
+ruff: ##@Linting Run ruff
+	.venv/bin/ruff check $(PROJECT_PATH)
 
 bandit: ##@Linting Run bandit
 	.venv/bin/bandit -r -ll -iii $(PROJECT_PATH) -f json -o ./bandit.json

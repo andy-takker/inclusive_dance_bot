@@ -29,21 +29,13 @@ Environment variables are used to configure the bot for connecting to Telegram, 
 
 ```bash
 
-TELEGRAM_BOT_TOKEN      # your bot token
-TELEGRAM_BOT_ADMIN_IDS  # Superadmin IDs, who can appoint other admins
+APP_TELEGRAM_BOT_TOKEN      # your bot token
+APP_TELEGRAM_BOT_ADMIN_IDS  # Superadmin IDs, who can appoint other admins
 
-DEBUG                   # Flag for debugging (using in sqlalchemy engine for echo)
+APP_DEBUG                   # Flag for debugging (using in sqlalchemy engine for echo)
 
-POSTGRES_HOST           # database host
-POSTGRES_PORT           # database port
-POSTGRES_USER           # database user
-POSTGRES_PASSWORD       # database password
-POSTGRES_DB             # database name
-
-REDIS_HOST              # redis host
-REDIS_PORT              # redis port
-REDIS_PASSWORD          # redis password
-REDIS_DB                # redis db
+APP_PG_DSN                  # DSN of your postgresql database
+APP_REDIS_DSN               # DSN of your redis storage
 ```
 
 ### Docker

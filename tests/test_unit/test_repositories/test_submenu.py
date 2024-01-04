@@ -1,14 +1,14 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inclusive_dance_bot.db.models import Submenu
-from inclusive_dance_bot.db.repositories.submenu import SubmenuRepository
-from inclusive_dance_bot.dto import SubmenuDto
-from inclusive_dance_bot.enums import SubmenuType
-from inclusive_dance_bot.exceptions import (
+from idb.db.models import Submenu as SubmenuDb
+from idb.db.repositories.submenu import SubmenuRepository
+from idb.exceptions import (
     SubmenuAlreadyExistsError,
     SubmenuNotFoundError,
 )
+from idb.generals.enums import SubmenuType
+from idb.generals.models.submenu import Submenu
 from tests.factories import SubmenuFactory
 
 
@@ -19,8 +19,8 @@ async def test_create(submenu_repo: SubmenuRepository, session: AsyncSession) ->
         message="Very long message message",
     )
     await session.commit()
-    saved_submenu = await session.get(Submenu, submenu.id)
-    assert submenu == SubmenuDto.from_orm(saved_submenu)
+    saved_submenu = await session.get(SubmenuDb, submenu.id)
+    assert submenu == Submenu.model_validate(saved_submenu)
 
 
 async def test_invalid_double_create(
@@ -45,7 +45,7 @@ async def test_invalid_double_create(
 async def test_get_by_id(submenu_repo: SubmenuRepository) -> None:
     submenu = await SubmenuFactory.create_async()
     loaded_submenu = await submenu_repo.get_by_id(submenu.id)
-    assert SubmenuDto.from_orm(submenu) == loaded_submenu
+    assert Submenu.model_validate(submenu) == loaded_submenu
 
 
 async def test_not_found_by_id(submenu_repo: SubmenuRepository) -> None:
@@ -54,14 +54,15 @@ async def test_not_found_by_id(submenu_repo: SubmenuRepository) -> None:
 
 
 async def test_get_list_emtpy(submenu_repo: SubmenuRepository) -> None:
-    empty = await submenu_repo.get_list()
+    empty = await submenu_repo.list()
     assert empty == tuple()
 
 
 async def test_get_list(submenu_repo: SubmenuRepository) -> None:
     submenus = await SubmenuFactory.create_batch_async(size=5)
-    loaded_submenus = await submenu_repo.get_list()
-    assert {SubmenuDto.from_orm(s) for s in submenus} == set(loaded_submenus)
+    submenus.sort(key=lambda x: (-x.weight, x.id))
+    loaded_submenus = await submenu_repo.list()
+    assert loaded_submenus == tuple(Submenu.model_validate(s) for s in submenus)
 
 
 async def test_get_list_order_by_weight(submenu_repo: SubmenuRepository) -> None:
@@ -69,22 +70,22 @@ async def test_get_list_order_by_weight(submenu_repo: SubmenuRepository) -> None
     first = await SubmenuFactory.create_async(weight=100)
     second = await SubmenuFactory.create_async(weight=30)
 
-    loaded_submenus = await submenu_repo.get_list()
+    loaded_submenus = await submenu_repo.list()
     assert loaded_submenus == tuple(
-        SubmenuDto.from_orm(e) for e in (first, second, third)
+        Submenu.model_validate(e) for e in (first, second, third)
     )
 
 
-async def test_get_list_by_type(submenu_repo: SubmenuRepository) -> None:
+async def test_get_list_by_correct_type(submenu_repo: SubmenuRepository) -> None:
     target_type = await SubmenuFactory.create_async(type=SubmenuType.CHARITY)
 
     charities = await submenu_repo.get_list_by_type(SubmenuType.CHARITY)
 
-    assert set(charities) == {SubmenuDto.from_orm(target_type)}
+    assert charities == [Submenu.model_validate(target_type)]
 
 
-async def test_get_list_by_type(submenu_repo: SubmenuRepository) -> None:
+async def test_get_list_by_incorrect_type(submenu_repo: SubmenuRepository) -> None:
     await SubmenuFactory.create_async(type=SubmenuType.EDUCATION)
 
     charities = await submenu_repo.get_list_by_type(SubmenuType.CHARITY)
-    assert set(charities) == set()
+    assert charities == list()
