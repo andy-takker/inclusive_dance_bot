@@ -30,17 +30,8 @@ jobs:
       - name: Install dependencies
         run: make develop
 
-      - name: Run flake8
-        run: make flake
-
-      - name: Run black
-        run: make black
-
-      - name: Run bandit
-        run: make bandit
-
-      - name: Run mypy
-        run: make mypy
+      - name: Run CI linters
+        run: make lint-ci
 
   test:
     name: Run service tests with pytest

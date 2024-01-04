@@ -1,9 +1,9 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inclusive_dance_bot.db.models import UserTypeUser
-from inclusive_dance_bot.db.repositories.user_type_user import UserTypeUserRepository
-from inclusive_dance_bot.exceptions import (
+from idb.db.models import UserTypeUser
+from idb.db.repositories.user_type_user import UserTypeUserRepository
+from idb.exceptions import (
     InvalidUserIDError,
     InvalidUserTypeIDError,
     UserTypeUserAlreadyExistsError,

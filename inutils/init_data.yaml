@@ -1,0 +1,180 @@
+user_types:
+  - id: 1
+    name: Руководитель коллектива
+
+  - id: 2
+    name: Хореограф / педагог
+
+  - id: 3
+    name: Специалист социокультурной сферы
+
+  - id: 4
+    name: Танцор с ОВЗ
+
+  - id: 5
+    name: Родитель танцора
+
+  - id: 6
+    name: Танцующий волонтер
+
+  - id: 7
+    name: Волонтер-организатор
+
+  - id: 8
+    name: Зритель
+
+  - id: 9
+    name: Партнер / благотворитель
+
+  - id: 10
+    name: Представитель СМИ
+
+  - id: 11
+    name: Просто интересуюсь
+
+urls:
+  - id: 1
+    slug: club_payment
+    description: Оплата за участие в Клубе
+    value: https://c.cloudpayments.ru/payments/b37773a15dc544f996ce2de65265d75d
+
+  - id: 2
+    slug: festival_press_release
+    description: Пресс-релиз фестиваля (ссылка на гугл-док)
+    value:
+
+  - id: 3
+    slug: buy_ticket
+    description: Купить билет (ссылка на таймпед)
+    value:
+
+  - id: 4
+    slug: seminar_registration
+    description: Зарегистрироваться на семинар (ссылка на гугл форму)
+    value: https://docs.google.com/forms/d/e/1FAIpQLSfqtSmNF2pR0h1gj2_8NO9tAqTBLTAPvR6HgXFiYdgu-wBdSw/viewform
+
+  - id: 5
+    slug: seminar_payment
+    description: Оплата за участие в семинаре
+    value: https://c.cloudpayments.ru/payments/75b956c67f444832b6c1d48c815874fd
+
+  - id: 6
+    slug: studio_registration
+    description: Запись в студию
+    value: https://docs.google.com/forms/d/e/1FAIpQLSf9gn-X7ERtEcChdmqNFqbIPxD7dWwh_RR_iL97ySZe6bBJDQ/viewform
+
+  - id: 7
+    slug: volunteer_form
+    description: Анкета волонтера
+    value: https://docs.google.com/forms/d/e/1FAIpQLScFw1yGSI2ZF4jiUiO6xeTYY2gn8gwlnDXrI9M1DHctZ81-UQ/viewform
+
+  - id: 8
+    slug: charity_payment
+    description: Форма пожертвования
+    value: https://inclusive-dance.ru/pomoch-nam/?to=one
+
+  - id: 9
+    slug: about_us
+    description: О нас
+    value: https://inclusive-dance.ru/o-fonde/
+
+  - id: 10
+    slug: blog
+    description: Блог
+    value: https://inclusive-dance.ru/news/
+
+  - id: 11
+    slug: dancing_film_site
+    description: Сайт фильма "Танцевать под дождем"
+    value: https://www.id-film.ru/
+
+  - id: 12
+    slug: dancing_film_watch
+    description: Посмотреть фильм "Танцевать под дождем"
+    value: https://wink.ru/movies/tantsevat-pod-dozhdem-year-2023
+
+submenus:
+  - id: 1
+    type: CHARITY
+    button_text: Сделать пожертвование
+    weight: 100
+    message: |
+      <a href="{{charity_payment}}">Сделать пожертвование</a>
+
+  - id: 2
+    type: CHARITY
+    button_text: Стать волонтером проекта
+    weight: 90
+    message: |
+      Вы увлекаетесь танцами и хотите заниматься в инклюзивном танцевальном коллективе? А может вы желаете помогать на социальных мероприятиях?
+
+      Тогда заполните анкету, чтобы мы могли связаться с вами и обсудить возможные варианты вашей помощи.
+
+      <a href="{{volunteer_form}}">Заполнить анкету волонтера</a>
+
+  - id: 3
+    type: CHARITY
+    button_text: Стать партнером проекта
+    weight: 80
+    message: |
+      Ссылка на сайт для партнеров
+
+  - id: 4
+    type: CHARITY
+    button_text: Рассказать о проекте
+    weight: 70
+    message: |
+      Ссылка на форму
+
+  - id: 5
+    type: CHARITY
+    button_text: Организовать показ фильма
+    weight: 60
+    message: |
+      Ссылка на форму
+
+  - id: 6
+    type: EVENT
+    button_text: Клуб профессионалов Inclusive dancing_film_site
+    weight: 100
+    message: |
+      <a href="{{ club_payment }}">Оплата за участие в Клубе</a>
+
+  - id: 7
+    type: EVENT
+    button_text: Фестиваль Inclusive Dance в Москве - октябрь 2023
+    weight: 90
+    message: |
+      <a href="{{ festival_press_release }}">Пресс-релиз фестиваля</a>
+
+      <a href="{{ buy_ticket }}">Купить билет</a>
+
+  - id: 8
+    type: EVENT
+    button_text: Социальное исследование
+    weight: 80
+    message: |
+      <a href="{{ club_payment }}">Запись на исследование</a>
+
+  - id: 9
+    type: INFORMATION
+    button_text: Что такое инклюзивный танец?
+    weight: 100
+    message: |
+      Короткое сообщение от бота об инклюзивном танце
+
+  - id: 10
+    type: INFORMATION
+    button_text: О проекте Inclusive Dance
+    weight: 90
+    message: |
+      Подробнее о проекте Inclusive Dance можно узнать на <a href="{{ about_us }}">официальном сайте</a>
+
+  - id: 11
+    type: INFORMATION
+    button_text: Новости проекта
+    weight: 80
+    message: |-
+      Все новости на нашем официальном <a href="{{ blog }}">сайте</a>
+
+      Хотите оперативно получ
