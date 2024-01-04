@@ -1,12 +1,12 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inclusive_dance_bot.db.repositories.feedback import FeedbackRepository
-from inclusive_dance_bot.db.repositories.submenu import SubmenuRepository
-from inclusive_dance_bot.db.repositories.url import UrlRepository
-from inclusive_dance_bot.db.repositories.user import UserRepository
-from inclusive_dance_bot.db.repositories.user_type import UserTypeRepository
-from inclusive_dance_bot.db.repositories.user_type_user import UserTypeUserRepository
+from idb.db.repositories.feedback import FeedbackRepository
+from idb.db.repositories.submenu import SubmenuRepository
+from idb.db.repositories.url import UrlRepository
+from idb.db.repositories.user import UserRepository
+from idb.db.repositories.user_type import UserTypeRepository
+from idb.db.repositories.user_type_user import UserTypeUserRepository
 
 
 @pytest.fixture

@@ -1,11 +1,11 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inclusive_dance_bot.db.models import Feedback
-from inclusive_dance_bot.db.repositories.feedback import FeedbackRepository
-from inclusive_dance_bot.dto import FeedbackDto
-from inclusive_dance_bot.enums import FeedbackType
-from inclusive_dance_bot.exceptions import InvalidUserIDError
+from idb.db.models import Feedback as FeedbackDb
+from idb.db.repositories.feedback import FeedbackRepository
+from idb.exceptions import InvalidUserIDError
+from idb.generals.enums import FeedbackType
+from idb.generals.models.feedback import Feedback
 from tests.factories import UserFactory
 
 
@@ -17,8 +17,8 @@ async def test_create(feedback_repo: FeedbackRepository, session: AsyncSession) 
         title="Some question",
         text="Very important question",
     )
-    loaded_feedback = await session.get(Feedback, feedback.id)
-    assert feedback == FeedbackDto.from_orm(loaded_feedback)
+    loaded_feedback = await session.get(FeedbackDb, feedback.id)
+    assert feedback == Feedback.model_validate(loaded_feedback)
 
 
 async def test_invalid_user_id(feedback_repo: FeedbackRepository) -> None:
