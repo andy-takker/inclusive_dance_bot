@@ -19,7 +19,6 @@ def main() -> None:
         default=os.getenv("APP_PG_DSN", DEFAULT_PG_DSN),
         help="Database URL [env var: APP_PG_DSN]",
     )
-
     options = alembic.parser.parse_args()
     if "cmd" not in options:
         alembic.parser.error("too few arguments")

@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  postgres:
     image: postgres:15
     restart: unless-stopped
     environment:
@@ -15,17 +15,17 @@ services:
   redis:
     image: redis
     restart: unless-stopped
-    command: redis-server --requirepass $REDIS_PASSWORD
 
   bot:
     image: andytakker/inclusive_dance_bot:latest
     restart: unless-stopped
-    command: /wait-for-it.sh -t 15 -h db -p 5432 -- /app/start.sh
+    command: /wait-for-it.sh -t 15 -h postgres -p 5432 -- /app/start.sh
     environment:
-      APP_REDIS_DSN: redis://:$REDIS_PASSWORD@redis:6379/1
+      APP_REDIS_DSN: redis://redis:6379/1
       APP_PG_DSN: postgresql+asyncpg://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
 
-      APP_TELEGRAM_BOT_TOKEN: $TELEGRAM_BOT_TOKEN
+      APP_TELEGRAM_BOT_TOKEN: $APP_TELEGRAM_BOT_TOKEN
+      APP_TELEGRAM_BOT_ADMIN_IDS: $APP_TELEGRAM_BOT_ADMIN_IDS
 
 volumes:
   postgres_data:
