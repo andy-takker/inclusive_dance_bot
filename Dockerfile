@@ -10,6 +10,6 @@ ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.s
 COPY /start.sh /app/
 RUN chmod +x /app/start.sh /wait-for-it.sh
 
-COPY ./inclusive_dance_bot /app/inclusive_dance_bot
+COPY ./idb /app/idb
 
 ENV PYTHONPATH=/app

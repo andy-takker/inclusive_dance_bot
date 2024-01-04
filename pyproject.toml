@@ -42,9 +42,9 @@ types-ujson = "^5.9.0.0"
 ruff = "^0.1.11"
 
 [tool.poetry.scripts]
-bot = "inclusive_dance_bot.__main__:main"
-init_data = "inclusive_dance_bot.init_data:main"
-migrate = "inclusive_dance_bot.db.__main__:main"
+bot = "idb.__main__:main"
+init_data = "idb.init_data:main"
+migrate = "idb.db.__main__:main"
 
 [build-system]
 requires = ["poetry-core"]
