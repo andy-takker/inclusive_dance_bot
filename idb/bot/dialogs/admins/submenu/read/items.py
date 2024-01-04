@@ -54,7 +54,7 @@ window = Window(
         on_page_changed=sync_scroll(SCROLL_MESSAGE_ID),
     ),
     Start(
-        text=Const("Добавить подменю"),
+        text=Const("🆕 Добавить подменю"),
         id="create_submenu",
         state=CreateSubmenuSG.type,
     ),

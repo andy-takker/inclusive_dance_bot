@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
-python -m idb.db --pg-url $PG_URL upgrade head
+set -e
 
-python /app/idb/init_data.py
+python -m idb.db upgrade head
+
+python /app/inutils/init_data.py --init-data-path=/app/inutils/init_data.yaml
 
 python -m idb

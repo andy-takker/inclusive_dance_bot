@@ -11,5 +11,6 @@ COPY /start.sh /app/
 RUN chmod +x /app/start.sh /wait-for-it.sh
 
 COPY ./idb /app/idb
+COPY ./inutils /app/inutils
 
 ENV PYTHONPATH=/app
