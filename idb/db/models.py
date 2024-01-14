@@ -102,6 +102,9 @@ class Answer(TimestampMixin, Base):
 
 class Mailing(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    author_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("users.id"), nullable=False, index=True
+    )
     scheduled_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, index=True
     )

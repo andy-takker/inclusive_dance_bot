@@ -7,7 +7,7 @@ from polyfactory.value_generators.constrained_strings import (
     handle_constrained_string_or_bytes,
 )
 
-from idb.db.models import Feedback, Submenu, Url, User, UserType
+from idb.db.models import Feedback, Mailing, Submenu, Url, User, UserType
 from idb.generals.enums import SubmenuType
 
 
@@ -64,6 +64,10 @@ class FeedbackFactory(SQLAlchemyFactory[Feedback]):
     __model__ = Feedback
     __set_foreign_keys__ = False
     __set_relationships__ = True
+
+
+class MailingFeedback(SQLAlchemyFactory[Mailing]):
+    __model__ = Mailing
 
 
 FACTORIES: tuple[SQLAlchemyFactory, ...] = (

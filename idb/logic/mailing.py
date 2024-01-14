@@ -39,19 +39,25 @@ async def process_new_mailing(uow: UnitOfWork, bot: Bot, mailing: Mailing) -> No
         except Exception:
             log.exception("Occured something")
     now = datetime.now(tz=pytz.utc)
-    await uow.mailings.update_by_id(mailing_id=mailing.id, is_sent=True, sent_at=now)
+    await uow.mailings.update_by_id(
+        mailing_id=mailing.id,
+        status=MailingStatus.SENT,
+        sent_at=now,
+    )
     await uow.commit()
 
 
 async def save_mailing(
     uow: UnitOfWork,
     bot: Bot,
+    author_id: int,
     title: str,
     content: str,
     scheduled_at: datetime | None,
     user_type_ids: list[int],
 ) -> None:
     mailing = await uow.mailings.create(
+        author_id=author_id,
         title=title,
         content=content,
         scheduled_at=scheduled_at,
