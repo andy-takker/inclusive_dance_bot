@@ -34,16 +34,18 @@ async def on_click(
     t = dialog_manager.dialog_data.get("time")
     d = dialog_manager.dialog_data.get("date")
     scheduled_at = parse_dt(t=t, d=d)
+    author_id: int = c.from_user.id
     await save_mailing(
         uow=uow,
         bot=dialog_manager.middleware_data["bot"],
+        author_id=author_id,
         title=dialog_manager.dialog_data["title"],
         content=dialog_manager.dialog_data["content"],
         scheduled_at=None if not scheduled_at else scheduled_at,
         user_type_ids=dialog_manager.dialog_data["user_types"],
     )
     dialog_manager.show_mode = ShowMode.SEND
-    await c.bot.send_message(c.from_user.id, text="Рассылка создана")  # type: ignore[union-attr]
+    await c.bot.send_message(author_id, text="Рассылка создана")  # type: ignore[union-attr]
     await dialog_manager.done()
 
 

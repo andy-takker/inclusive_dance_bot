@@ -10,7 +10,6 @@ from idb.db.models import Mailing as MailingDb
 from idb.db.models import MailingUserType as MailingUserTypeDb
 from idb.db.repositories.base import Repository
 from idb.exceptions import (
-    EntityNotFoundError,
     InclusiveDanceError,
     MailingNotFoundError,
 )
@@ -34,6 +33,7 @@ class MailingRepository(Repository[MailingDb]):
     async def create(
         self,
         *,
+        author_id: int,
         title: str,
         content: str,
         scheduled_at: datetime | None,
@@ -43,6 +43,7 @@ class MailingRepository(Repository[MailingDb]):
         stmt = (
             insert(MailingDb)
             .values(
+                author_id=author_id,
                 title=title,
                 content=content,
                 scheduled_at=scheduled_at,
@@ -119,7 +120,7 @@ class MailingRepository(Repository[MailingDb]):
             obj = result.one()
             await self._session.flush(obj)
         except NoResultFound as e:
-            raise EntityNotFoundError from e
+            raise MailingNotFoundError from e
         await self._session.refresh(obj)
         return obj
 
